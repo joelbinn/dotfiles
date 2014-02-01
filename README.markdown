@@ -1,4 +1,9 @@
-# holman does dotfiles
+# joebin does dotfiles
+Mina fixar:
+
+* installera oh-my-zsh
+* installera mina dotfiles
+
 
 ## dotfiles
 

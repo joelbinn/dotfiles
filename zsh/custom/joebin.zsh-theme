@@ -98,7 +98,6 @@ get_space () {
 
 _1LEFT="$_USERNAME $_PATH"
 _1RIGHT="[%*] "
-_GIT="$(bureau_git_prompt) $(nvm_prompt_info) "
 
 bureau_precmd () {
   _1SPACES=`get_space $_1LEFT $_1RIGHT`
@@ -107,7 +106,7 @@ bureau_precmd () {
 
 setopt prompt_subst
 PROMPT='$_1LEFT$_1SPACES$_1RIGHT
-$_GIT
+$(bureau_git_prompt) $(nvm_prompt_info)
 $_LIBERTY '
 RPROMPT='$(nvm_prompt_info)'
 
