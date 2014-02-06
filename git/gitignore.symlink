@@ -104,3 +104,14 @@ build.log
 derby.log
 
 web-lab/modern-web-app/overlays
+
+.idea/
+.idea_modules/
+.settings
+dist/
+build/
+
+derby.log
+*.log
+play
+

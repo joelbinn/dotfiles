@@ -1,3 +1,10 @@
+export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
+alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"
+. `brew --prefix`/etc/profile.d/z.sh
+export NIC=en2
+ip_address=`ifconfig ${NIC} | awk '/inet/ {print $2}' |  grep -e "\." `
+export EXTERNAL_IP_ADDRESS=$ip_address
+
 # Path to my customization
 ZSH_CUSTOM=~/.dotfiles/zsh/custom
 
@@ -53,8 +60,10 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
+export JAVA_HOME=/usr/local/jdk
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # # Preferred editor for local and remote sessions
