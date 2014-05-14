@@ -1,3 +1,5 @@
+echo "Initialize joebin.zsh-theme..."
+
 # oh-my-zsh Bureau Theme
 
 ### NVM
