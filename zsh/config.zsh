@@ -46,8 +46,3 @@ bindkey '^[[5C' end-of-line
 bindkey '^[[3~' delete-char
 bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
-
-# User configuration
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
