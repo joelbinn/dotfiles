@@ -22,3 +22,12 @@ alias mou="open -a Mou "
 alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"
 alias mq8='mvn -T8 -q'
 alias mq8ci='mvn -T8 -q clean install'
+alias mcis='mvn clean install -Pslow-test'
+alias mit='mvn clean verify -Pint-test'
+alias mitd='mvn clean process-test-resources cargo:run -Pint-test -Pdebug'
+alias mito='mvn clean verify -Pint-test -Dsystem.type=old-demo-env -Ddatabase.connectionurl="jdbc:oracle:thin:@phoebe.tillvaxtverket.se:1521:nypsutv" -Ddatabase.user=nyps2020_demo -Ddatabase.password=utv888'
+alias mitod='mvn clean process-test-resources cargo:run -Pdebug -Pint-test -Dsystem.type=old-demo-env -Ddatabase.connectionurl="jdbc:oracle:thin:@phoebe.tillvaxtverket.se:1521:nypsutv" -Ddatabase.user=nyps2020_demo -Ddatabase.password=utv888'
+alias mdbt='mvn install -Pslow-test'
+alias mswfly='mvn clean initialize -P setup-wildfly'
+alias mvnlocrep='mvn -Dmaven.repo.local=./slask/m2repo'
+
