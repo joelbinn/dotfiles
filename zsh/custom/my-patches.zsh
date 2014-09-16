@@ -1,3 +1,5 @@
+. `/usr/local/bin/brew --prefix`/etc/profile.d/z.sh
+
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 echo "Initialize Joel's patches..."
@@ -10,8 +12,6 @@ export EXTERNAL_IP_ADDRESS=$ip_address
 echo " -> EXTERNAL_IP_ADDRESS=$EXTERNAL_IP_ADDRESS"
 export DOCKER_HOST=tcp://localhost:4243
 echo " -> DOCKER_HOST=$DOCKER_HOST"
-
-. `brew --prefix`/etc/profile.d/z.sh
 
 function server() {
         python -m SimpleHTTPServer "8989"

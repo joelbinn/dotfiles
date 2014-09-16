@@ -50,12 +50,10 @@ ZSH_THEME="joebin"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git)
 
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
