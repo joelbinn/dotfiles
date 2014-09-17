@@ -1,3 +1,10 @@
+. `/usr/local/bin/brew --prefix`/etc/profile.d/z.sh
+
+# User configuration
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$PATH:$HOME/bin:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
+
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 echo "Initialize Joel's patches..."
@@ -10,8 +17,6 @@ export EXTERNAL_IP_ADDRESS=$ip_address
 echo " -> EXTERNAL_IP_ADDRESS=$EXTERNAL_IP_ADDRESS"
 export DOCKER_HOST=tcp://localhost:4243
 echo " -> DOCKER_HOST=$DOCKER_HOST"
-
-. `brew --prefix`/etc/profile.d/z.sh
 
 function server() {
         python -m SimpleHTTPServer "8989"
