@@ -10,6 +10,12 @@
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="false" />
     </RunnerSettings>
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="8787" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="false" />
+    </RunnerSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Debug" />
     <method />
   </configuration>
