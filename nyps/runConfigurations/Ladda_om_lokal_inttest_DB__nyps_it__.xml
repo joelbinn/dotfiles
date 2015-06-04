@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Snabbygg rubbet (inga tester)" type="MavenRunConfiguration" factoryName="Maven" folderName="Bygg">
+  <configuration default="false" name="Ladda om lokal inttest DB (nyps-it) " type="MavenRunConfiguration" factoryName="Maven" folderName="DB">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -24,31 +24,23 @@
           </option>
           <option name="goals">
             <list>
-              <option value="-T4" />
               <option value="clean" />
-              <option value="install" />
+              <option value="compile" />
+              <option value="exec:java" />
+              <option value="-Ddatabase.connectionurl=jdbc:mysql://localhost:3306/nyps-it" />
+              <option value="-Ddatabase.user=test" />
+              <option value="-Ddatabase.password=test" />
             </list>
           </option>
           <option name="profilesMap">
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/tool.appl/dbloader.tool.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>

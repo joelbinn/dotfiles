@@ -2,7 +2,7 @@
   <configuration default="false" name="ExampleInfoModelDBLoader" type="Application" factoryName="Application" nameIsGenerated="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="se.tvv.nyps.infomodel.dbloader.*" />
+        <option name="PATTERN" value="se.tvv.nyps.infomodel.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

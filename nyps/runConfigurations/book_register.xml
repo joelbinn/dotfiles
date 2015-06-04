@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Bygg om EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="book-register" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -11,22 +11,17 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="package" />
+              <option value="wildfly:deploy" />
             </list>
           </option>
           <option name="profilesMap">
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/appl/be.appl/ear.be.appl" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/be.appl/rest.be.appl/book-register" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />

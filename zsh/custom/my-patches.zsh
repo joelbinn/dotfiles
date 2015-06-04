@@ -46,7 +46,7 @@ local-copy-dev-dump() {
     if [ "" != "$1" ]; then
         scp jenkins@capulet:db-dump/$1 .;
         if [[ $? -eq 0 ]]; then
-            scp ./$1 oracle@oraexp:/rman/dpdir/XE/dev_dump.dmp;
+            scp ./$1 oracle@oraexp:/rman/dpdir/XE/dev_db.dmp;
             rm ./$1
             return 0;
         else
@@ -58,16 +58,16 @@ local-copy-dev-dump() {
 }
 
 db-reload() {
-    pushd $NYPS2020_ROOT; 
+    #cd $NYPS2020_ROOT/; 
     ssh oracle@oraexp 'bash db_import_test_dump.sh -f dev_db.dmp'; 
     mvn clean install flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml;
-    popd;
+    #cd -;
 }
 
 db-migrate() {
-    pushd $NYPS2020_ROOT; 
+    #cd $NYPS2020_ROOT/; 
     mvn clean install flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml;
-    popd;
+    #cd -;
 }
 
 db-ls-dumps() {
@@ -116,4 +116,6 @@ alias nyps-oracle-baseline-local='$NYPS2020_ROOT/etc/sqlplus/drop_db.sh nyps2020
 alias tree="find . -type d -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 alias missioncontrol='export JAVA_TOOL_OPTIONS="-Djava.awt.headless=false";jmc&'
 alias visualvm='export JAVA_TOOL_OPTIONS="-Djava.awt.headless=false";jvisualvm&'
+alias brewupdate='brew update; brew upgrade --all'
+alias jrepl='java -jar /Users/joebin/verktyg/javarepl.jar'
 

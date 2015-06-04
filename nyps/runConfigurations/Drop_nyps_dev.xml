@@ -4,10 +4,10 @@
     <option name="INTERPRETER_PATH" value="/bin/bash" />
     <option name="WORKING_DIRECTORY" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <envs />
-    <module name="nyps2020" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/etc/mysql/drop-nyps-dev.sh" />
     <option name="PARAMETERS" value="" />
+    <module name="nyps2020" />
+    <envs />
     <RunnerSettings RunnerId="JRebel Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />

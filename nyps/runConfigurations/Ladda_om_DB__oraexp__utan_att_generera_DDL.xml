@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Snabbygg rubbet (inga tester)" type="MavenRunConfiguration" factoryName="Maven" folderName="Bygg">
+  <configuration default="false" name="Ladda om DB (oraexp) utan att generera DDL" type="MavenRunConfiguration" factoryName="Maven" folderName="DB">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -24,31 +24,26 @@
           </option>
           <option name="goals">
             <list>
-              <option value="-T4" />
               <option value="clean" />
-              <option value="install" />
+              <option value="compile" />
+              <option value="exec:java" />
+              <option value="-Ddatabase.connectionurl=jdbc:oracle:thin:@oraexp:1521:xe" />
+              <option value="-Ddatabase.user=nyps2020_local" />
+              <option value="-Ddatabase.password=utv888" />
+              <option value="-Ddbloader.ddl.nocreate=true" />
             </list>
           </option>
           <option name="profilesMap">
-            <map />
+            <map>
+              <entry key="default" value="true" />
+            </map>
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/tool.appl/dbloader.tool.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>

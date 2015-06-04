@@ -1,19 +1,19 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ITRegisterMinimalApplication on localhost:8080 (MySQL)" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="ITLifeCycle en metod (Lokal Oraexp)" type="JUnit" factoryName="JUnit" folderName="Local service-int.test">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="se.tvv.nyps.test.integration.scenarios.*" />
+        <option name="PATTERN" value="se.tvv.nyps.test.integration.slowtest.scenarios.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
     <module name="service-int.test" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
-    <option name="PACKAGE_NAME" value="se.tvv.nyps.test.integration.scenarios" />
-    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.test.integration.scenarios.ITLifecycle" />
-    <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="class" />
-    <option name="VM_PARAMETERS" value="-ea -Dnyps.host=&quot;localhost:8080&quot; -Dtest.db.connectionurl=jdbc:mysql://localhost:3306/nyps-it  -Dtest.db.user=test -Dtest.db.password=test" />
+    <option name="PACKAGE_NAME" value="se.tvv.nyps.test.integration.slowtest.scenarios" />
+    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.test.integration.slowtest.scenarios.ITLifecycle" />
+    <option name="METHOD_NAME" value="testLifeCycle_StartNewDecisionRounds" />
+    <option name="TEST_OBJECT" value="method" />
+    <option name="VM_PARAMETERS" value="-ea -Dnyps.host=&quot;127.0.0.1:18080&quot; -Dtest.db.connectionurl=jdbc:oracle:thin:@oraexp:1521:XE -Dtest.db.user=nyps2020_local_it -Dtest.db.password=utv888 -Dnyps.ddl=etc/ddl/nyps2020-ddl.sql" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ENV_VARIABLES" />
@@ -23,12 +23,13 @@
     </option>
     <envs />
     <patterns />
-    <RunnerSettings RunnerId="JRebel Debug">
+    <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>

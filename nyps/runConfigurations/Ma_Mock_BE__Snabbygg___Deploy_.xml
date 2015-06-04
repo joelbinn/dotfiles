@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Snabbygg rubbet (inga tester)" type="MavenRunConfiguration" factoryName="Maven" folderName="Bygg">
+  <configuration default="false" name="Ma-Mock BE: Snabbygg &amp; Deploy " type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -7,7 +7,7 @@
           <option name="environmentProperties">
             <map />
           </option>
-          <option name="jreName" value="#USE_PROJECT_JDK" />
+          <option name="jreName" value="1.8" />
           <option name="mavenProperties">
             <map />
           </option>
@@ -24,32 +24,21 @@
           </option>
           <option name="goals">
             <list>
-              <option value="-T4" />
               <option value="clean" />
               <option value="install" />
+              <option value="wildfly:deploy" />
             </list>
           </option>
           <option name="profilesMap">
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/myapp-ma-mock.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
-    <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Debug" />
-    <ConfigurationWrapper RunnerId="Run" />
-    <method />
+    <method>
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/appl/dto.appl/pom.xml" goal="install -DskipTests" />
+    </method>
   </configuration>
 </component>

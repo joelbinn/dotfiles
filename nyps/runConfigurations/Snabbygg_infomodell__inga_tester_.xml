@@ -25,6 +25,7 @@
           <option name="goals">
             <list>
               <option value="install" />
+              <option value="-o" />
             </list>
           </option>
           <option name="profilesMap">

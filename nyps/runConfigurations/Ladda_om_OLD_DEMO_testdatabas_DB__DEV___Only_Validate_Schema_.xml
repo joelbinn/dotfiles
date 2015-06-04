@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BE Snabbygg &amp; Deploy (-P no-nexus and -DskipNexus=true)" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Ladda om OLD DEMO testdatabas DB (DEV) (Only Validate Schema)" type="MavenRunConfiguration" factoryName="Maven" folderName="DB">
     <MavenSettings>
       <option name="myGeneralSettings">
         <MavenGeneralSettings>
@@ -7,15 +7,15 @@
           <option name="checksumPolicy" value="NOT_SET" />
           <option name="failureBehavior" value="NOT_SET" />
           <option name="localRepository" value="" />
-          <option name="mavenHome" value="" />
+          <option name="mavenHome" value="/usr/local/Cellar/maven/3.3.1/libexec" />
           <option name="nonRecursive" value="false" />
-          <option name="outputLevel" value="INFO" />
+          <option name="outputLevel" value="ERROR" />
           <option name="pluginUpdatePolicy" value="DEFAULT" />
           <option name="printErrorStackTraces" value="false" />
           <option name="threads" />
           <option name="usePluginRegistry" value="false" />
           <option name="userSettingsFile" value="" />
-          <option name="workOffline" value="false" />
+          <option name="workOffline" value="true" />
         </MavenGeneralSettings>
       </option>
       <option name="myRunnerSettings">
@@ -26,7 +26,10 @@
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
-              <entry key="skipNexus" value="true" />
+              <entry key="database.connectionurl" value="jdbc:oracle:thin:tj_utv/utv888@phoebe.tillvaxtverket.se:1521:nypsutv" />
+              <entry key="database.password" value="utv888" />
+              <entry key="database.user" value="nyps2020_demo" />
+              <entry key="dbloader.ddl.nocreate" value="true" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -43,26 +46,27 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="install" />
+              <option value="compile" />
+              <option value="exec:java" />
             </list>
           </option>
           <option name="profilesMap">
             <map>
-              <entry key="deploy" value="true" />
-              <entry key="no-nexus" value="true" />
+              <entry key="default" value="true" />
             </map>
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/appl/be.appl" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/tool.appl/dbloader.tool.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
+    <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>

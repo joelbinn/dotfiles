@@ -43,7 +43,6 @@
           </option>
           <option name="goals">
             <list>
-              <option value="clean" />
               <option value="compile" />
               <option value="exec:java" />
             </list>
@@ -58,8 +57,16 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method />
+    <method>
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Drop nyps-dev" run_configuration_type="BashConfigurationType" />
+    </method>
   </configuration>
 </component>

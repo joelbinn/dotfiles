@@ -10,11 +10,11 @@
     </extension>
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="se.tvv.nyps.infomodel.dbloader.*" />
+        <option name="PATTERN" value="se.tvv.nyps.infomodel.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.infomodel.dbloader.DBLoader_DEV" />
+    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.infomodel.DBLoader_DEV" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="-c jdbc:mysql://localhost:3306/nyps-dev -u test -p test" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Ladda om lokal DB (DEV)" type="MavenRunConfiguration" factoryName="Maven" folderName="DB">
+  <configuration default="false" name="Ladda om DEV_FB1 testdatabas DB (DEV) (Generate Schema)" type="MavenRunConfiguration" factoryName="Maven" folderName="DB">
     <MavenSettings>
       <option name="myGeneralSettings">
         <MavenGeneralSettings>
@@ -7,7 +7,7 @@
           <option name="checksumPolicy" value="NOT_SET" />
           <option name="failureBehavior" value="NOT_SET" />
           <option name="localRepository" value="" />
-          <option name="mavenHome" value="" />
+          <option name="mavenHome" value="/usr/local/Cellar/maven/3.3.1/libexec" />
           <option name="nonRecursive" value="false" />
           <option name="outputLevel" value="ERROR" />
           <option name="pluginUpdatePolicy" value="DEFAULT" />
@@ -15,7 +15,7 @@
           <option name="threads" />
           <option name="usePluginRegistry" value="false" />
           <option name="userSettingsFile" value="" />
-          <option name="workOffline" value="false" />
+          <option name="workOffline" value="true" />
         </MavenGeneralSettings>
       </option>
       <option name="myRunnerSettings">
@@ -26,8 +26,10 @@
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
-              <entry key="disableAuth" value="false" />
-              <entry key="enableSync" value="true" />
+              <entry key="database.connectionurl" value="jdbc:oracle:thin:tj_utv/utv888@phoebe.tillvaxtverket.se:1521:nypsutv" />
+              <entry key="database.password" value="utv888" />
+              <entry key="database.user" value="NYPS2020_DEV_FB1" />
+              <entry key="dbloader.ddl.nocreate" value="false" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -58,22 +60,8 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
-    <RunnerSettings RunnerId="JRebel Debug">
-      <option name="DEBUG_PORT" value="" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method>
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Drop nyps-dev" run_configuration_type="BashConfigurationType" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Snabbygg rubbet (inga tester)" run_configuration_type="MavenRunConfiguration" />
-    </method>
+    <method />
   </configuration>
 </component>
