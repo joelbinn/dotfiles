@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Nyps BE: Deploya EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Deploya ADsync-EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -10,7 +10,6 @@
           </option>
           <option name="goals">
             <list>
-              <option value="clean" />
               <option value="wildfly:deploy" />
             </list>
           </option>
@@ -18,7 +17,7 @@
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/appl/be.appl/ear.be.appl" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/adsync.appl/ear.adsync.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>

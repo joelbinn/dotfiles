@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Nyps BE: Deploya EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Nyps BE: Bygg nyps-BE och deploya EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -22,6 +22,15 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method />
+    <RunnerSettings RunnerId="JRebel Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Run" />
+    <method>
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Snabbygg allt utom appl.fe" run_configuration_type="MavenRunConfiguration" />
+    </method>
   </configuration>
 </component>

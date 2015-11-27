@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Manga BE: Deploya EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Deploya Nyps och Manga BE EAR:s" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -35,6 +35,8 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method />
+    <method>
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Nyps BE: Deploya EAR" run_configuration_type="MavenRunConfiguration" />
+    </method>
   </configuration>
 </component>

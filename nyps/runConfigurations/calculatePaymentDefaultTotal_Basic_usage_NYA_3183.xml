@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="calculatePaymentDefaultTotal.Basic usage.NYA-3183" type="mocha-javascript-test-runner" factoryName="Mocha" nameIsGenerated="true">
+    <node-options />
+    <working-directory>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs />
+    <ui>bdd</ui>
+    <extra-mocha-options />
+    <test-kind>TEST</test-kind>
+    <test-file>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl/src/test/javascript/DefaultCalculatePaymentTotalMochaTest.js</test-file>
+    <test-names>
+      <name value="calculatePaymentDefaultTotal" />
+      <name value="Basic usage" />
+      <name value="NYA-3183" />
+    </test-names>
+    <method />
+  </configuration>
+</component>

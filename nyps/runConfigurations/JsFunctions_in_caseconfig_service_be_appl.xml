@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JsFunctions in caseconfig.service.be.appl" type="mocha-javascript-test-runner" factoryName="Mocha">
+    <node-options />
+    <working-directory>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs />
+    <ui>bdd</ui>
+    <extra-mocha-options />
+    <test-kind>DIRECTORY</test-kind>
+    <test-directory>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl/src/test/javascript</test-directory>
+    <recursive>true</recursive>
+    <method />
+  </configuration>
+</component>

@@ -9,9 +9,9 @@
     <module name="service-int.test" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
-    <option name="PACKAGE_NAME" value="se.tvv.nyps.test.integration.slowtest.scenarios" />
-    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.test.integration.slowtest.scenarios.ITLifecycle" />
-    <option name="METHOD_NAME" value="testLifeCycle_PaymentDecisionRound" />
+    <option name="PACKAGE_NAME" value="se.tvv.nyps.test.integration.smoketest.nypsrest" />
+    <option name="MAIN_CLASS_NAME" value="se.tvv.nyps.test.integration.smoketest.nypsrest.ActorsTests" />
+    <option name="METHOD_NAME" value="testParticipantsAndBudget" />
     <option name="TEST_OBJECT" value="method" />
     <option name="VM_PARAMETERS" value="-ea -Dnyps.host=&quot;127.0.0.1:18080&quot; -Dtest.db.connectionurl=jdbc:oracle:thin:@oraexp:1521:XE -Dtest.db.user=nyps2020_local_it -Dtest.db.password=utv888 -Dnyps.ddl=$PROJECT_DIR$/slask/it-ddl.sql" />
     <option name="PARAMETERS" value="" />

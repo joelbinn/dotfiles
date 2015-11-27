@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Ma-Mock BE: Snabbygg &amp; Deploy " type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Ma-Mock BE: Snabbygg &amp; Deploy " type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
