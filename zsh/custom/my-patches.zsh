@@ -11,10 +11,13 @@ export PROJ_DISK=/Volumes/projects-40g
 export NYPS2020_ROOT=$PROJ_DISK/tvv/nyps2020/
 export PROJSTUFF=$PROJ_DISK/projectstuff
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export PATH=$PATH:$HOME/.cabal/bin
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=./node:./node_modules/.bin:$PATH:$HOME/bin:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
+export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
+export PATH=./node:./node_modules/.bin:$PATH
 export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
 
+export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true"
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 echo "Initialize Joel's patches..."
