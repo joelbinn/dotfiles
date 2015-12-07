@@ -16,6 +16,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
 export PATH=./node:./node_modules/.bin:$PATH
 export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
+export REBEL_HOME=$HOME/verktyg/jrebel
 
 export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true"
 DIR="$( cd "$( dirname "$0" )" && pwd )"
