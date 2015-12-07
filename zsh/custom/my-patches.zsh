@@ -48,10 +48,16 @@ mcd () {
 }
 
 local-copy-dev-dump() {
+    dest="dev_db.dmp";
+    if [ "" != "$2" ]; then
+      dest=$2;
+    fi
+
+    echo "copy jenkins@capulet:db-dump/$1 -> oracle@oraexp:/rman/dpdir/XE/$dest";
     if [ "" != "$1" ]; then
         scp jenkins@capulet:db-dump/$1 .;
         if [[ $? -eq 0 ]]; then
-            scp ./$1 oracle@oraexp:/rman/dpdir/XE/dev_db.dmp;
+            scp ./$1 oracle@oraexp:/rman/dpdir/XE/$dest;
             rm ./$1
             return 0;
         else
@@ -77,11 +83,11 @@ db-migrate() {
 }
 
 db-ls-dumps() {
-    ssh jenkins@capulet 'ls -1 ~/db-dump/';
+    ssh jenkins@capulet 'ls -alt -1 ~/db-dump/';
 }
 
 db-copy-dev-dump() {
-    local-copy-dev-dump $1
+    local-copy-dev-dump $1 $2
     if [[ $? -eq 1 ]]; then
         echo "No dump file specified!";
     fi
