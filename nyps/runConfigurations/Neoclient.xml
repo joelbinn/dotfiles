@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Neoclient" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="$PROJECT_DIR$/appl/fe.appl/neoclient.fe.appl/yo/karma.conf.js">
+    <karma-package-dir value="$PROJECT_DIR$/appl/fe.appl/neoclient.fe.appl/yo/node_modules/karma" />
     <envs />
     <method />
   </configuration>

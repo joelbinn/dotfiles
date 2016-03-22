@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Deploya Nyps och Manga BE EAR:s" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Deploya Nyps, Manga och Mammut BE EAR:s" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -35,8 +35,12 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="JProfiler">
+      <option name="WINDOW" value="false" />
+    </RunnerSettings>
     <method>
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Nyps BE: Deploya EAR" run_configuration_type="MavenRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Ma-Mock BE: Snabbygg &amp; Deploy " run_configuration_type="MavenRunConfiguration" />
     </method>
   </configuration>
 </component>

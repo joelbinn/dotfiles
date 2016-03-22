@@ -1,0 +1,39 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ITSmokeTest service-int.test (localhost:18080, MySQL, nyps-dev)" type="JUnit" factoryName="JUnit" folderName="Local service-int.test">
+    <extension name="chronon">
+      <include>
+        <pattern>
+          <option name="PATTERN" value="se.tvv.nyps.test.integration.myapp.**" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </include>
+    </extension>
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+      <pattern>
+        <option name="PATTERN" value="se.tvv.nyps.test.integration.smoketest.myapp.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <module name="service-int.test" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="PACKAGE_NAME" value="se.tvv.nyps.test.integration" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <option name="VM_PARAMETERS" value="-ea -Dnyps.host=&quot;localhost:18080&quot; " />
+    <option name="PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="moduleWithDependencies" />
+    </option>
+    <envs />
+    <patterns />
+    <RunnerSettings RunnerId="JProfiler">
+      <option name="WINDOW" value="false" />
+    </RunnerSettings>
+    <method />
+  </configuration>
+</component>

@@ -9,6 +9,9 @@ export NLS_LANG=SWEDISH_SWEDEN.UTF8
 
 export PROJ_DISK=/Volumes/projects-40g
 export NYPS2020_ROOT=$PROJ_DISK/tvv/nyps2020/
+export NEO_HOME=$NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/yo
+export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl/yo
+export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl/yo
 export PROJSTUFF=$PROJ_DISK/projectstuff
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH=$PATH:$HOME/.cabal/bin
@@ -29,9 +32,12 @@ export ip_address=`ifconfig ${NIC} | awk '/inet/ {print $2}' |  grep -e "\." `
 echo " -> ip_address=$ip_address"
 export EXTERNAL_IP_ADDRESS=$ip_address
 echo " -> EXTERNAL_IP_ADDRESS=$EXTERNAL_IP_ADDRESS"
-export DOCKER_HOST=tcp://localhost:4243
-echo " -> DOCKER_HOST=$DOCKER_HOST"
+# export DOCKER_HOST=tcp://localhost:4243
+# echo " -> DOCKER_HOST=$DOCKER_HOST"
 export TNS_ADMIN=~/.tnsadmin
+
+# Docker init
+eval "$(docker-machine env default)"
 
 function server() {
         python -m SimpleHTTPServer "8989"
@@ -165,7 +171,11 @@ alias nyps-oracle-migrate="mvn -f /Volumes/nyps2020-CaseSensitive/nyps2020/appl/
 #alias nyps-oracle-baseline-local="nyps-oracle-drop; $NYPS2020_ROOT/etc/sqlplus/run_sqlplus.sh -u nyps2020_local -p utv888 -c XE $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/src/main/resources/db/baseline/nyps2020_baseline_dev_v3.0.0.sql"
 alias nyps-oracle-baseline-local="ssh oracle@oraexp 'bash db_import_test_dump.sh -f NYPS2020_LOCAL_150409_prod_13_cases_v4.dmp'"
 
-alias nyps-neoclient-run="bash -c 'cd $NYPSCLIENT_HOME && grunt serve --proxy-be'"
+alias nyps-build="mvn clean install -DskipTests -P-include-fe -f $NYPS2020_ROOT/pom.xml"
+alias nyps-build-slow-test="mvn clean install -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
+alias nyps-neoclient-run="bash -c 'cd $NEO_HOME && grunt serve --open-page=false  --proxy-be=true '"
+alias nyps-manga-run="bash -c 'cd $MANGA_HOME && grunt serve --open-page=false  --proxy-be=true '"
+alias nyps-mamock-run="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
 alias nyps-adminclient-run="cd $NYPS2020_ROOT/appl/fe.appl/adminclient.fe.appl/adminclient && grunt serve --proxy-be"
 alias nyps-build-deploy="mvn -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
 alias manga-build-deploy="mvn -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
@@ -178,3 +188,4 @@ alias nyps-wildfly-rebuild="mvn -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean ins
 alias nyps-wildfly-adminclient-deploy="mvn -f $NYPS2020_ROOT/appl/be.appl/rest.be.appl/admin-api.rest.be.appl/pom.xml wildfly:deploy"
 
 alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
+alias nyps-inttest="mvn -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"

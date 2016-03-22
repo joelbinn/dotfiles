@@ -35,10 +35,12 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="JProfiler">
+      <option name="WINDOW" value="false" />
+    </RunnerSettings>
     <method>
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Snabbygg allt utom appl.fe" run_configuration_type="MavenRunConfiguration" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Nyps BE: Deploya EAR" run_configuration_type="MavenRunConfiguration" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Deploya ADsync-EAR" run_configuration_type="MavenRunConfiguration" />
     </method>
   </configuration>
 </component>

@@ -37,6 +37,9 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="JProfiler">
+      <option name="WINDOW" value="false" />
+    </RunnerSettings>
     <method>
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/appl/dto.appl/pom.xml" goal="install -DskipTests" />
     </method>

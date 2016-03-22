@@ -29,6 +29,7 @@
             <list>
               <option value="clean" />
               <option value="wildfly:deploy" />
+              <option value="-DskipTests" />
             </list>
           </option>
           <option name="profilesMap">
@@ -39,6 +40,9 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="JProfiler">
+      <option name="WINDOW" value="false" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />
