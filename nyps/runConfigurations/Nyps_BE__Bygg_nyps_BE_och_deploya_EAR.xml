@@ -22,6 +22,9 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
+    <RunnerSettings RunnerId="Debug with VisualVM">
+      <option name="visualVMId" value="601716428871118" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="JProfiler">
       <option name="WINDOW" value="false" />
     </RunnerSettings>

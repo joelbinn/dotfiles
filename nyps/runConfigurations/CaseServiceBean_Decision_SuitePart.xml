@@ -2,7 +2,7 @@
   <configuration default="false" name="CaseServiceBean_Decision_SuitePart" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="se.tvv.nyps.caseservice.impl.*" />
+        <option name="PATTERN" value="se.tvv.nyps.cacherefresh.impl.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

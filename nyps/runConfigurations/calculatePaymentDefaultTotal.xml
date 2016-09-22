@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="src/test/javascript/DefaultCalculatePaymentTotalMochaTest.js" type="mocha-javascript-test-runner" factoryName="Mocha" nameIsGenerated="true">
+  <configuration default="false" name="calculatePaymentDefaultTotal" type="mocha-javascript-test-runner" factoryName="Mocha">
     <node-interpreter>project</node-interpreter>
     <node-options />
     <working-directory>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl</working-directory>
@@ -7,8 +7,13 @@
     <envs />
     <ui>bdd</ui>
     <extra-mocha-options />
-    <test-kind>TEST_FILE</test-kind>
+    <test-kind>TEST</test-kind>
     <test-file>$PROJECT_DIR$/appl/be.appl/service.be.appl/caseconfig.service.be.appl/src/test/javascript/DefaultCalculatePaymentTotalMochaTest.js</test-file>
-    <method />
+    <test-names>
+      <name value="" />
+    </test-names>
+    <method>
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Installera beroenden för Nashornstuff" run_configuration_type="js.build_tools.npm" />
+    </method>
   </configuration>
 </component>
