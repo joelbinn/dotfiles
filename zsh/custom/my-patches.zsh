@@ -1,5 +1,9 @@
 . `/usr/local/bin/brew --prefix`/etc/profile.d/z.sh
 
+# Make sure locale is correct
+export LC_ALL=sv_SE.UTF-8
+export LANG=sv_SE.UTF-8
+
 # User configuration
 #export ORACLE_HOME=$NYPS2020_ROOT/etc/sqlplus/instantclient/macosx_64
 #export TNS_ADMIN=$ORACLE_HOME
@@ -99,6 +103,11 @@ db-dump-copy-all() {
   fi
 }
 
+db-reload-no-migrate() {
+    ssh oracle@oraexp 'bash db_import_test_dump.sh -s XE  -u NYPS2020_LOCAL -p utv888 -f dev_db_nyps.dmp';
+    ssh oracle@oraexp 'bash db_import_test_dump_manga.sh -s XE -u NYPS2020_MIN_LOCAL -p utv888  -w -f dev_db_manga.dmp';
+}
+
 db-reload() {
     ssh oracle@oraexp 'bash db_import_test_dump.sh -s XE  -u NYPS2020_LOCAL -p utv888 -f dev_db_nyps.dmp';
     # docker exec -it -u oracle oraexp /bin/bash -c 'bash db_import_test_dump.sh -s XE  -u NYPS2020_LOCAL -p utv888 -f dev_db_nyps.dmp';
@@ -160,12 +169,12 @@ reset-oraexp() {
   docker rm -f oraexp;
   echo "Starting oraexp...";
   docker run -d --shm-size=2G --name oraexp -p 1521:1521 oraexp:1.0;
+  wait-until-oraexp-started;
 }
 
 wait-until-oraexp-started() {
   dots="";
   echo -en "Wait for Oracle to start";
-  cnt=0;
   while true; do
     pmon=`docker exec -it oraexp /bin/bash -c 'ps -ef | grep pmon_$ORACLE_SID | grep -v grep'`;
     up=`docker exec -it oraexp /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`;
@@ -174,12 +183,8 @@ wait-until-oraexp-started() {
       dots="${dots}."
     else
       echo "\nOraexp has started!"
-      if [ $cnt -gt 0 ]; then
-        sleep 20;
-      fi
       return;
     fi
-    cnt=cnt+1
     sleep 5
   done;
 }
@@ -233,7 +238,7 @@ db-load-dumps() {
 
 #  docker commit -m "Oracle express with nyps and manga dumps from date: $date, ver: $ver" oraexp oraexp:$ver_$date;
 #  echo "created image oraexp oraexp:$ver_$date";
-  
+
   if [ "no-migrate" != "$noMigrate" ]; then
     db-migrate-nyps;
     db-migrate-manga;
