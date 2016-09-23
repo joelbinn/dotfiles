@@ -127,17 +127,20 @@ db-dump-to-docker-oraexp() {
   schema=$2
   src="jenkins@capulet:db-dump"
 
-  echo "copy $src/$dumpfile -> oraexp:/u01/app/oracle/admin/XE/dpdump/$schema.dmp";
   if [ "" != "$dumpfile" ] && [ "" != "$schema" ]; then
-      echo "scp $src/$dumpfile /tmp/$schema.dmp"
-      scp $src/$dumpfile /tmp/$schema.dmp;
-      echo "docker cp /tmp/$schema.dmp oraexp:/u01/app/oracle/admin/XE/dpdump/$schema.dmp"
-      docker cp /tmp/$schema.dmp oraexp:/u01/app/oracle/admin/XE/dpdump/$schema.dmp;
-      docker exec -it oraexp /bin/bash -c 'touch /u01/app/oracle/admin/XE/dpdump/last-imported-$schems-$dumpfile';
-      echo "docker exec -it oraexp chmod 777 /u01/app/oracle/admin/XE/dpdump/$schema.dmp"
-      docker exec -it oraexp chmod 777 /u01/app/oracle/admin/XE/dpdump/$schema.dmp;
-      echo "Clean up ./"
-      rm -f ./${dumpfile};
+      oraexpDestination="/u01/app/oracle/admin/XE/dpdump/$dumpfile";
+      dumpExists=$(eval "docker exec -it oraexp /bin/bash -c 'if [ -f ${oraexpDestination} ]; then echo yes; fi;'");
+      if [ "$dumpExists" != "" ]; then
+          echo "Dump $dumpfile already exists on oraexp";
+      else
+          echo "copy $src/$dumpfile -> oraexp:$oraexpDestination";
+          echo "scp $src/$dumpfile /tmp/$dumpfile"
+          scp $src/$dumpfile /tmp/$dumpfile;
+          echo "docker cp /tmp/$dumpfile oraexp:$oraexpDestination"
+          docker cp /tmp/$dumpfile oraexp:$oraexpDestination;
+          echo "docker exec -it oraexp chmod 777 $oraexpDestination"
+          docker exec -it oraexp chmod 777 $oraexpDestination;
+       fi
   else
       echo "usage: db-dump-to-docker-oraexp <dumpfile> <'NYPS2020_LOCAL'|'NYPS2020_MIN_LOCAL'>"
       return 1;
@@ -145,10 +148,11 @@ db-dump-to-docker-oraexp() {
 }
 
 load-dump() {
-  schema=$1
-  echo "Loading dump $schema";
-  echo "docker exec -it oraexp /u01/app/oracle/product/11.2.0/xe/bin/impdp oraload/utv888 dumpfile=$schema.dmp remap_schema=ORALOAD:$schema"
-  docker exec -it oraexp /u01/app/oracle/product/11.2.0/xe/bin/impdp oraload/utv888 dumpfile=$schema.dmp remap_schema=ORALOAD:$schema;
+  schema=$1;
+  dumpfile=$2;
+  echo "Loading dump $dumpfile";
+  echo "docker exec -it oraexp /u01/app/oracle/product/11.2.0/xe/bin/impdp oraload/utv888 dumpfile=$dumpfile remap_schema=ORALOAD:$schema"
+  docker exec -it oraexp /u01/app/oracle/product/11.2.0/xe/bin/impdp oraload/utv888 table_exists_action=replace dumpfile=$dumpfile remap_schema=ORALOAD:$schema;
 }
 
 reset-oraexp() {
@@ -159,19 +163,33 @@ reset-oraexp() {
 }
 
 wait-until-oraexp-started() {
-  echo "Wait for Oracle to start..."
+  dots="";
+  echo -en "Wait for Oracle to start";
+  cnt=0;
   while true; do
     pmon=`docker exec -it oraexp /bin/bash -c 'ps -ef | grep pmon_$ORACLE_SID | grep -v grep'`;
-    up=`docker exec -it oraexp /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`
+    up=`docker exec -it oraexp /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`;
     if [[ "$up" =~ '.*ERROR.*' ]]; then
-      echo "Oraexp not up yet..."
+      echo -en "${dots}"
+      dots="${dots}."
     else
-      echo "Oraexp has started!"
-      sleep 10;
+      echo "\nOraexp has started!"
+      if [ $cnt -gt 0 ]; then
+        sleep 20;
+      fi
       return;
     fi
-    sleep 10
+    cnt=cnt+1
+    sleep 5
   done;
+}
+
+nyps-dump-name() {
+    echo "NYPS2020_LOCAL_${1}_prod_v${2}_dummy_documents_nn_cases.dmp";
+}
+
+manga-dump-name() {
+    echo "NYPS2020_MIN_LOCAL_${1}_prod_v${2}_dummy_documents.dmp";
 }
 
 copy-nyps2020-dump() {
@@ -182,29 +200,50 @@ copy-manga-dump() {
   db-dump-to-docker-oraexp NYPS2020_MIN_LOCAL_${1}_prod_v${2}_dummy_documents.dmp NYPS2020_MIN_LOCAL;
 }
 
-db-reload-docker-all() {
+db-reset-and-reload() {
+    reset-oraexp;
+    db-load-dumps $1 $2 $3;
+}
+
+db-migrate-nyps() {
+    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml;
+}
+
+db-migrate-manga() {
+    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl/pom.xml;
+}
+
+db-load-dumps() {
   date=$1;
   ver=$2;
-  migrate=$3
+  noMigrate=$3;
 
   if [ "" = "$date" ] || [ "" = "$ver" ]; then
-    echo "usage: db-reload-all <date> <version>; e.g db-reload-all 160919 8.0.0";
+    echo "usage: db-reload-all <date> <version> [no-migrate]; e.g db-reload-all 160919 8.0.0";
     return 1;
   fi
 
-  reset-oraexp;
-  copy-nyps2020-dump $date $ver;
-  copy-manga-dump $date $ver;
+  db-dump-to-docker-oraexp $(nyps-dump-name $1 $2) NYPS2020_LOCAL;
+  db-dump-to-docker-oraexp $(manga-dump-name $1 $2) NYPS2020_LOCAL;
 
   wait-until-oraexp-started
 
-  load-dump NYPS2020_LOCAL;
-  load-dump NYPS2020_MIN_LOCAL;
+  load-dump NYPS2020_LOCAL $(nyps-dump-name $1 $2);
+  load-dump NYPS2020_LOCAL $(manga-dump-name $1 $2);
 
-  if [ "" != "$migrate"]; then
-    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml;
-    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl/pom.xml;
+#  docker commit -m "Oracle express with nyps and manga dumps from date: $date, ver: $ver" oraexp oraexp:$ver_$date;
+#  echo "created image oraexp oraexp:$ver_$date";
+  
+  if [ "no-migrate" != "$noMigrate" ]; then
+    db-migrate-nyps;
+    db-migrate-manga;
   fi
+}
+
+docker-clean-up() {
+    docker rm $(docker ps -q -f 'status=exited');
+    docker rmi $(docker images -q -f "dangling=true");
+    docker volume rm $(docker volume ls -qf dangling=true);
 }
 
 eval "$(thefuck --alias)"
