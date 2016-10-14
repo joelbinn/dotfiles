@@ -1,8 +1,8 @@
 . `/usr/local/bin/brew --prefix`/etc/profile.d/z.sh
 
 # Make sure locale is correct
-export LC_ALL=sv_SE.UTF-8
 export LANG=sv_SE.UTF-8
+export LC_ALL=$LANG
 
 # User configuration
 #export ORACLE_HOME=$NYPS2020_ROOT/etc/sqlplus/instantclient/macosx_64
@@ -176,7 +176,6 @@ wait-until-oraexp-started() {
   dots="";
   echo -en "Wait for Oracle to start";
   while true; do
-    pmon=`docker exec -it oraexp /bin/bash -c 'ps -ef | grep pmon_$ORACLE_SID | grep -v grep'`;
     up=`docker exec -it oraexp /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`;
     if [[ "$up" =~ '.*ERROR.*' ]]; then
       echo -en "${dots}"
@@ -218,6 +217,11 @@ db-migrate-manga() {
     mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl/pom.xml;
 }
 
+db-migrate() {
+    db-migrate-manga;
+    db-migrate-nyps;
+}
+
 db-load-dumps() {
   date=$1;
   ver=$2;
@@ -251,13 +255,21 @@ docker-clean-up() {
     docker volume rm $(docker volume ls -qf dangling=true);
 }
 
+change-extension-recursively() {
+    exit 1; #funkar inte än
+    orgext = $1;
+    newext = $2;
+    git = $3;
+    find . -name "*.${orgext}" -exec bash -c '${git} mv "$1" "${1%.${orgext}}".${newext}' - '{}' \;
+}
+
 eval "$(thefuck --alias)"
 alias httpserver='server'
 alias mou="open -a Mou "
 alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"
 alias mq8='mvn -T8 -q'
-alias mvnqk='mvn -T8 clean install -DskipTests'
-alias mq8ci='mvn -T8 -q clean install'
+alias mvnq='mvn -T 1C -o -DskipTests'
+alias mq8ci='mvn -T8 -q clean install -am'
 alias mcis='mvn clean install -Pslow-test'
 alias mit='mvn clean verify -Pint-test'
 alias mitd='mvn clean process-test-resources cargo:run -Pint-test -Pdebug'
@@ -307,41 +319,49 @@ setup-nyps2020-aliases() {
 
   #NYPS2020
   alias cdnyps="cd $NYPS2020_ROOT"
-  alias nyps-mysql-authenticate_on="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh on"
-  alias nyps-mysql-authenticate_off="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh off"
-  alias nyps-mysql-reload="mvn clean compile exec:java -f $NYPS2020_ROOT/appl/tool.appl/dbloader.tool.appl/pom.xml"
-  alias nyps-mysql-recreate="mysql -uroot -p < $NYPS2020_ROOT/etc/mysql/recreate-nyps-dev.sql"
-  alias nyps-mysql-legacy="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-jnp-host.sh $LEGACY_SERVER_IP_ADDRESS"
+  alias nyps-build-slow-test="mvnq install -o -T 1C -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
+  alias nyps-client="bash -c 'cd $NEO_HOME && npm start '"
 
-  alias nyps-oracle-drop="$NYPS2020_ROOT/etc/sqlplus/drop_db.sh nyps2020_local utv888 XE"
-  alias nyps-oracle-reload="nyps-oracle-baseline-local; mvn -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml clean install flyway:migrate"
-  alias nyps-oracle-authenticate_on="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/update-nyps-oracle-authenticate.sql 'false' 'true'"
-  alias nyps-oracle-authenticate_off="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/update-nyps-oracle-authenticate.sql 'true' 'false'"
-  alias nyps-oracle-migrate="mvn -f /Volumes/nyps2020-CaseSensitive/nyps2020/appl/tool.appl/db-migration.tool.appl/pom.xml clean install flyway:migrate"
-  #alias nyps-oracle-baseline-local="nyps-oracle-drop; $NYPS2020_ROOT/etc/sqlplus/run_sqlplus.sh -u nyps2020_local -p utv888 -c XE $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/src/main/resources/db/baseline/nyps2020_baseline_dev_v3.0.0.sql"
-  alias nyps-oracle-baseline-local="ssh oracle@oraexp 'bash db_import_test_dump.sh -f NYPS2020_LOCAL_150409_prod_13_cases_v4.dmp'"
+  alias nyps-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
+  alias nyps-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/be.appl/ear.be.appl"
+  alias nyps-deploy-client="mvnq -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
 
-  alias nyps-build="mvn clean install -DskipTests -P-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-build-slow-test="mvn clean install -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-neoclient="bash -c 'cd $NEO_HOME && npm start '"
-  alias nyps-manga="bash -c 'cd $MANGA_HOME && npm start '"
-  alias nyps-mamock="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
-  alias nyps-adminclient-run="cd $NYPS2020_ROOT/appl/fe.appl/adminclient.fe.appl/adminclient && grunt serve --proxy-be"
-  alias nyps-be-build-deploy="mvn install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
-  alias manga-nyps-be-build-deploy="mvn install -DskipTests -f common &&
-  mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
-  alias manga-be-build-deploy="mvn install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
-  alias nyps-deploy="mvn clean package wildfly:deploy -f $NYPS2020_ROOT/appl/be.appl/ear.be.appl"
-  alias nyps-deploy-adsync="mvn -f $NYPS2020_ROOT/appl/adsync.appl/pom.xml install -Pdeploy"
-  alias nyps-deploy-eco="mvn -f $NYPS2020_ROOT/appl/ecoint-be.appl/ear.ecoint-be.appl/pom.xml install -Pdeploy"
-  alias nyps-deploy-neoclient="mvn -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
+  # MANGA
+  alias manga-client="bash -c 'cd $MANGA_HOME && npm start '"
+  alias manga-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
+  alias manga-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-be.appl/ear.myapp-be.appl"
+
+  # MAMOCK
+  alias mamock-client="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
+  alias mamock-deploy="mvnq clean wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-ma-mock.appl"
+
+  # MISC
+  alias nyps-build-all="mvnq clean install -DskipTests -P-include-fe -f $NYPS2020_ROOT/pom.xml"
+  alias nyps-deploy-all="nyps-be-build-deploy && manga-be-build-deploy && mamock-be-build-deploy"
+  alias nyps-deploy-adsync="mvnq -f $NYPS2020_ROOT/appl/adsync.appl/pom.xml install -Pdeploy"
+  alias nyps-deploy-eco="mvnq -f $NYPS2020_ROOT/appl/ecoint-be.appl/ear.ecoint-be.appl/pom.xml install -Pdeploy"
+
+  alias nyps-wildfly-start-alt="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';export JAVA_OPTS='$JAVA_OPTS -XXaltjvm=dcevm'; $NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
   alias nyps-wildfly-start="$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
   alias nyps-wildfly-rebuild="mvn -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly"
-  alias nyps-wildfly-adminclient-deploy="mvn -f $NYPS2020_ROOT/appl/be.appl/rest.be.appl/admin-api.rest.be.appl/pom.xml wildfly:deploy"
 
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
-  alias nyps-inttest="mvn -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
+  alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
 
+# OBSOLETE
+#  alias nyps-mysql-authenticate_on="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh on"
+#  alias nyps-mysql-authenticate_off="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh off"
+#  alias nyps-mysql-reload="mvn clean compile exec:java -f $NYPS2020_ROOT/appl/tool.appl/dbloader.tool.appl/pom.xml"
+#  alias nyps-mysql-recreate="mysql -uroot -p < $NYPS2020_ROOT/etc/mysql/recreate-nyps-dev.sql"
+#  alias nyps-mysql-legacy="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-jnp-host.sh $LEGACY_SERVER_IP_ADDRESS"
+#
+#  alias nyps-oracle-drop="$NYPS2020_ROOT/etc/sqlplus/drop_db.sh nyps2020_local utv888 XE"
+#  alias nyps-oracle-reload="nyps-oracle-baseline-local; mvn -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml clean install flyway:migrate"
+#  alias nyps-oracle-authenticate_on="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/update-nyps-oracle-authenticate.sql 'false' 'true'"
+#  alias nyps-oracle-authenticate_off="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/update-nyps-oracle-authenticate.sql 'true' 'false'"
+#  alias nyps-oracle-migrate="mvn -f /Volumes/nyps2020-CaseSensitive/nyps2020/appl/tool.appl/db-migration.tool.appl/pom.xml clean install flyway:migrate"
+#  alias nyps-oracle-baseline-local="nyps-oracle-drop; $NYPS2020_ROOT/etc/sqlplus/run_sqlplus.sh -u nyps2020_local -p utv888 -c XE $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/src/main/resources/db/baseline/nyps2020_baseline_dev_v3.0.0.sql"
+#  alias nyps-oracle-baseline-local="ssh oracle@oraexp 'bash db_import_test_dump.sh -f NYPS2020_LOCAL_150409_prod_13_cases_v4.dmp'"
 }
 
 alias nyps-maintenance="setup-nyps2020-aliases nyps2020-maintenance"
@@ -349,5 +369,7 @@ alias dock-compiler='docker exec -it -u nyps compiler /bin/bash  -c "export TERM
 alias dock-compiler-maintenance='docker exec -it -u nyps compiler-maintenance /bin/bash  -c "export TERM=xterm; exec bash;"'
 alias dock-oraexp='docker exec -it -u oracle oraexp /bin/bash  -c "export TERM=xterm; exec bash;"'
 alias dock-jenkins='docker exec -it -u jenkins jenkins /bin/bash  -c "export TERM=xterm; exec bash;"'
+alias brew-refresh='brew update && brew upgrade && npm update -g'
+alias git="LC_ALL=en_US.UTF-8 git"
 
 setup-nyps2020-aliases

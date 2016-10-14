@@ -24,6 +24,11 @@
           </option>
           <option name="goals">
             <list>
+              <option value="-T" />
+              <option value="1C" />
+              <option value="-o" />
+              <option value="-am" />
+              <option value="install" />
               <option value="wildfly:deploy" />
             </list>
           </option>
@@ -40,8 +45,6 @@
     </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method>
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Snabbygg allt utom appl.fe" run_configuration_type="MavenRunConfiguration" />
-    </method>
+    <method />
   </configuration>
 </component>
