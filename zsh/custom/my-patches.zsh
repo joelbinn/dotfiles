@@ -21,6 +21,7 @@ export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:
 export PATH=./node:./node_modules/.bin:$PATH
 export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
 export REBEL_HOME=$HOME/verktyg/jrebel
+export NYPS_WILDFLY_OPTS="-XXaltjvm=dcevm"
 
 export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true"
 DIR="$( cd "$( dirname "$0" )" && pwd )"
@@ -94,7 +95,8 @@ db-dump-copy-all() {
     return;
   fi
 
-  src_nyps_dump="NYPS2020_LOCAL_${date}_prod_v${ver}_dummy_documents_nn_cases.dmp"
+  src_nyps_dump="NYPS2020_LOCAL_${date}_prod_v${ver}_dummy_documents.dmp"
+  # src_nyps_dump="NYPS2020_LOCAL_${date}_prod_v${ver}_dummy_documents_nn_cases.dmp"
   src_manga_dump="NYPS2020_MIN_LOCAL_${date}_prod_v${ver}_dummy_documents.dmp"
   echo "copying ${src_nyps_dump} and ${src_manga_dump}"
   db-dump-fetch $src_nyps_dump "dev_db_nyps.dmp"
@@ -263,12 +265,33 @@ change-extension-recursively() {
     find . -name "*.${orgext}" -exec bash -c '${git} mv "$1" "${1%.${orgext}}".${newext}' - '{}' \;
 }
 
+dockerExecBash() {
+    if [ "" = "$1" ]; then
+      echo "Du måste ange namn på docker container";
+      return 1;
+    fi
+
+    docker exec -it $1 bash
+}
+
+db-run() {
+  container_name=$1;
+  if [ "" = "$container_name" ]; then
+    container_name="oraexp"
+  fi
+
+  echo "Run DB container: $container_name"
+
+  docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
+}
+
 eval "$(thefuck --alias)"
 alias httpserver='server'
 alias mou="open -a Mou "
 alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"
+alias mvn="mvn -T 1C"
 alias mq8='mvn -T8 -q'
-alias mvnq='mvn -T 1C -o -DskipTests'
+alias mvnq='mvn -T 1C -o -DskipTests -P-include-fe'
 alias mq8ci='mvn -T8 -q clean install -am'
 alias mcis='mvn clean install -Pslow-test'
 alias mit='mvn clean verify -Pint-test'
@@ -304,7 +327,7 @@ alias gc="git commit -m"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gr="git pull --rebase"
 alias gs="git status"
-
+alias mvn="mvn -T 1C  -Dsettings.localRepository=./m2repo"
 
 setup-nyps2020-aliases() {
   root=$1
@@ -322,6 +345,7 @@ setup-nyps2020-aliases() {
   alias nyps-build-slow-test="mvnq install -o -T 1C -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
   alias nyps-client="bash -c 'cd $NEO_HOME && npm start '"
 
+  alias nyps-build-be-ear="mvnq -am -pl appl/be.appl/ear.be.appl -DskipTests"
   alias nyps-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
   alias nyps-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/be.appl/ear.be.appl"
   alias nyps-deploy-client="mvnq -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
@@ -335,6 +359,9 @@ setup-nyps2020-aliases() {
   alias mamock-client="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
   alias mamock-deploy="mvnq clean wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-ma-mock.appl"
 
+  # AD-SYNC
+  alias adsync-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/adsync.appl/ear.adsync.appl/"
+
   # MISC
   alias nyps-build-all="mvnq clean install -DskipTests -P-include-fe -f $NYPS2020_ROOT/pom.xml"
   alias nyps-deploy-all="nyps-be-build-deploy && manga-be-build-deploy && mamock-be-build-deploy"
@@ -343,7 +370,7 @@ setup-nyps2020-aliases() {
 
   alias nyps-wildfly-start-alt="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';export JAVA_OPTS='$JAVA_OPTS -XXaltjvm=dcevm'; $NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
   alias nyps-wildfly-start="$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
-  alias nyps-wildfly-rebuild="mvn -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly"
+  alias nyps-wildfly-rebuild="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';mvnq -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly;$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/add-user.sh --user admin --password admin123"
 
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
   alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
@@ -371,5 +398,6 @@ alias dock-oraexp='docker exec -it -u oracle oraexp /bin/bash  -c "export TERM=x
 alias dock-jenkins='docker exec -it -u jenkins jenkins /bin/bash  -c "export TERM=xterm; exec bash;"'
 alias brew-refresh='brew update && brew upgrade && npm update -g'
 alias git="LC_ALL=en_US.UTF-8 git"
-
+alias reload-shell=". ~/.dotfiles/zsh/custom/my-patches.zsh"
+alias dkrsh='dockerExecBash'
 setup-nyps2020-aliases
