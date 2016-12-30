@@ -285,6 +285,23 @@ db-run() {
   docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
 }
 
+switch-clone() {
+  git_clone_dir=$1;
+  if [ "" = "$git_clone_dir" ] || [ ! -f "${git_clone_dir}/pom.xml" ]; then
+    echo "Usage: switch-clone <directory>"
+    return 1;
+  fi
+
+  git_clone_dir=$(cd $git_clone_dir;pwd);
+
+  echo "Switching to clone in $git_clone_dir";
+
+  export NYPS2020_ROOT=$git_clone_dir;
+  alias mvn="mvn -T 1C -Dmaven.repo.local=$git_clone_dir/m2repo";
+  alias db-start="db-run oraexp-$(basename $git_clone_dir)";
+  cd $git_clone_dir;
+}
+
 eval "$(thefuck --alias)"
 alias httpserver='server'
 alias mou="open -a Mou "
@@ -327,7 +344,7 @@ alias gc="git commit -m"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gr="git pull --rebase"
 alias gs="git status"
-alias mvn="mvn -T 1C  -Dsettings.localRepository=./m2repo"
+alias mvn="mvn -T 1C"
 
 setup-nyps2020-aliases() {
   root=$1
