@@ -55,6 +55,14 @@ bureau_git_status () {
   echo $_STATUS
 }
 
+absolute_nyps2020_path() {
+  if [ "$NYPS2020_ROOT" = "" ]; then
+    echo ""
+  else
+    echo $(cd $NYPS2020_ROOT; pwd)
+  fi
+}
+
 bureau_git_prompt () {
   local _branch=$(bureau_git_branch)
   local _status=$(bureau_git_status)
@@ -98,7 +106,8 @@ get_space () {
   echo $SPACES
 }
 
-_1LEFT="$_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
+absolute_path=$(absolute_nyps2020_path)
+_1LEFT="$_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH $absolute_path"
 _1RIGHT="[%*] "
 
 bureau_precmd () {
