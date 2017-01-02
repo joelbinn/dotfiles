@@ -99,7 +99,7 @@ get_space () {
 
 bureau_precmd () {
   local truncwidth
-  ((truncwidth=${COLUMNS}-46))
+  ((truncwidth=${COLUMNS}-50))
   _PATH="%{$FG[$light_blue]%}%$truncwidth<...<%~%<<%{$reset_color%}"
   _1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
   _1RIGHT=""
