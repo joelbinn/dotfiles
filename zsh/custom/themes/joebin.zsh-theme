@@ -55,14 +55,6 @@ bureau_git_status () {
   echo $_STATUS
 }
 
-absolute_nyps2020_path() {
-  if [ "$NYPS2020_ROOT" = "" ]; then
-    echo ""
-  else
-    echo $(cd $NYPS2020_ROOT; pwd)
-  fi
-}
-
 bureau_git_prompt () {
   local _branch=$(bureau_git_branch)
   local _status=$(bureau_git_status)
@@ -78,7 +70,6 @@ bureau_git_prompt () {
 }
 
 
-_PATH="%{$fg_bold[white]%}%~%{$reset_color%}"
 
 if [[ "%#" == "#" ]]; then
   _USERNAME="%{$fg_bold[red]%}%n"
@@ -106,20 +97,34 @@ get_space () {
   echo $SPACES
 }
 
-absolute_path=$(absolute_nyps2020_path)
-_1LEFT="$_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH $absolute_path"
-_1RIGHT="[%*] "
-
 bureau_precmd () {
+  local truncwidth
+  ((truncwidth=${COLUMNS}-46))
+  _PATH="%{$FG[$light_blue]%}%$truncwidth<...<%~%<<%{$reset_color%}"
+  _1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
+  _1RIGHT=""
+  _2LEFT="$(bureau_git_prompt)"
+  _2RIGHT="$(nyps_prompt)"
   _1SPACES=`get_space $_1LEFT $_1RIGHT`
+  _2SPACES=`get_space $_2LEFT $_2RIGHT`
   echo
+}
+
+nyps_prompt() {
+  local truncwidth
+  ((truncwidth=${COLUMNS}-25))
+  if [ "" = "$NYPS2020_ROOT" ]; then
+    echo "";
+  else
+    echo "%{$fg[red]%}@%{$reset_color%}%{$fg[green]%}%$truncwidth<...<$NYPS2020_ROOT%<<%{$reset_color%}";
+  fi
 }
 
 setopt prompt_subst
 PROMPT='$_1LEFT$_1SPACES$_1RIGHT
-$(bureau_git_prompt) $(nvm_prompt_info)
+$(bureau_git_prompt)$(nyps_prompt)
 $_LIBERTY '
-RPROMPT='$(nvm_prompt_info)'
+# RPROMPT='$(nyps_shell)'
 
 autoload -U add-zsh-hook
 add-zsh-hook precmd bureau_precmd

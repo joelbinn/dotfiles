@@ -285,23 +285,6 @@ db-run() {
   docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
 }
 
-switch-clone() {
-  git_clone_dir=$1;
-  if [ "" = "$git_clone_dir" ] || [ ! -f "${git_clone_dir}/pom.xml" ]; then
-    echo "Usage: switch-clone <directory>"
-    return 1;
-  fi
-
-  git_clone_dir=$(cd $git_clone_dir;pwd);
-
-  echo "Switching to clone in $git_clone_dir";
-
-  export NYPS2020_ROOT=$git_clone_dir;
-  alias mvn="mvn -T 1C -Dmaven.repo.local=$git_clone_dir/m2repo";
-  alias db-start="db-run oraexp-$(basename $git_clone_dir)";
-  cd $git_clone_dir;
-}
-
 eval "$(thefuck --alias)"
 alias httpserver='server'
 alias mou="open -a Mou "
@@ -347,12 +330,12 @@ alias gs="git status"
 alias mvn="mvn -T 1C"
 
 setup-nyps2020-aliases() {
-  root=$1
+  local root=$1
   if [ "" = "$root" ]; then
-    root=nyps2020
+    echo "1st argument must specify the git clone of nyps2020"
+    return 1;
   fi
-
-  export NYPS2020_ROOT=$PROJ_DISK/tvv/$root
+  export NYPS2020_ROOT=$1
   export NEO_HOME=$NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl
   export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
@@ -391,6 +374,7 @@ setup-nyps2020-aliases() {
 
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
   alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
+  alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
 
 # OBSOLETE
 #  alias nyps-mysql-authenticate_on="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh on"
@@ -408,6 +392,49 @@ setup-nyps2020-aliases() {
 #  alias nyps-oracle-baseline-local="ssh oracle@oraexp 'bash db_import_test_dump.sh -f NYPS2020_LOCAL_150409_prod_13_cases_v4.dmp'"
 }
 
+db-wait-up() {
+  local container_name=$1;
+  if [ "" = "$container_name" ]; then
+    echo "Usage: db-wait-up <container name>"
+    return 1;
+  fi
+
+  dots="";
+  echo -en "Wait for Oracle to start";
+  while true; do
+    up=`docker exec -it ${container_name} /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`;
+    if [[ "$up" =~ '.*ERROR.*' ]]; then
+      echo -en "${dots}"
+      dots="${dots}."
+    else
+      echo "\nOraexp has started!"
+      return;
+    fi
+    sleep 5
+  done;
+}
+
+switch-clone() {
+  local root=$1;
+  if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
+    echo "Usage: switch-clone <NYPS2020 git root directory>"
+    return 1;
+  fi
+
+  root=$(cd $root;pwd); # expand path
+  db_name="oraexp-$(basename $root)"
+
+  echo "Switching to clone in $root";
+  setup-nyps2020-aliases $root;
+
+  alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
+  alias db-start="db-run $db_name";
+  alias db-clear="docker rm -f $db_name";
+  alias db-reset="db-clear && db-start";
+  alias db-up="db-wait-up $db_name";
+  cd $NYPS2020_ROOT;
+}
+
 alias nyps-maintenance="setup-nyps2020-aliases nyps2020-maintenance"
 alias dock-compiler='docker exec -it -u nyps compiler /bin/bash  -c "export TERM=xterm; exec bash;"'
 alias dock-compiler-maintenance='docker exec -it -u nyps compiler-maintenance /bin/bash  -c "export TERM=xterm; exec bash;"'
@@ -417,4 +444,4 @@ alias brew-refresh='brew update && brew upgrade && npm update -g'
 alias git="LC_ALL=en_US.UTF-8 git"
 alias reload-shell=". ~/.dotfiles/zsh/custom/my-patches.zsh"
 alias dkrsh='dockerExecBash'
-setup-nyps2020-aliases
+alias get2020root="echo $NYPS2020_ROOT"

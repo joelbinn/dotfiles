@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Nyps BE: Deploya EAR" type="MavenRunConfiguration" factoryName="Maven" folderName="Deploy">
+  <configuration default="false" name="Migrera Nyps-databasen" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings">
         <MavenGeneralSettings>
@@ -27,14 +27,15 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="wildfly:deploy" />
+              <option value="compile" />
+              <option value="flyway:migrate" />
             </list>
           </option>
           <option name="profilesMap">
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/appl/be.appl/ear.be.appl" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/appl/tool.appl/db-migration.tool.appl" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
