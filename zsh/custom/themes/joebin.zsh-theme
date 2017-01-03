@@ -1,3 +1,4 @@
+
 echo "Initialize joebin.zsh-theme..."
 
 # oh-my-zsh Bureau Theme
@@ -76,7 +77,7 @@ if [[ "%#" == "#" ]]; then
   _LIBERTY="%{$fg[red]%}#"
 else
   _USERNAME="%{$fg_bold[white]%}%n"
-  _LIBERTY="%{$fg[green]%}λ"
+  _LIBERTY="%{$fg[green]%}λ "
 fi
 _USERNAME="$_USERNAME%{$reset_color%}@%m"
 _LIBERTY="$_LIBERTY%{$reset_color%}"

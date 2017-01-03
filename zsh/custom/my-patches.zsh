@@ -414,8 +414,13 @@ db-wait-up() {
   done;
 }
 
-switch-clone() {
-  local root=$1;
+nysh() {
+  local root;
+  if [ "" = "$1" ]; then
+    root=$(pwd);
+  else
+    root=$1;
+  fi
   if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
     echo "Usage: switch-clone <NYPS2020 git root directory>"
     return 1;
