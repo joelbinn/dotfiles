@@ -14,12 +14,10 @@ cdWithNypsCheck() {
   local dir=$(pwd)
   local closestNypsRoot=$(findClosestNypsRoot $dir)
   if [ "$NYPS2020_SHELL" != "" ] && ( ! isNypsRoot $closestNypsRoot || [ "$closestNypsRoot" != "$NYPS2020_ROOT" ] ); then
-    echo "Out"
     unset NYPS2020_SHELL
     . ~/.zshrc
     return 0;
   elif isNypsRoot $closestNypsRoot && [ "$NYPS2020_SHELL" = "" ]; then
-    echo "In"
     . ~/.zshrc
     return 0;
   fi
