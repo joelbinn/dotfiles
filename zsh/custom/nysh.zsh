@@ -99,9 +99,14 @@ nysh() {
   root=$(cd $root;pwd); # expand path
   local closestNypsRoot=$(findClosestNypsRoot $root)
 
+  if [ "$closestNypsRoot" = "NYPS_ROOT_NOT_FOUND" ]; then
+    echo "Could start Nyps Shell since ny valid Nyps root was found in this directory or in any of its parents. Bailing...";
+    return 1;
+  fi
+
   if [ "" = "${closestNypsRoot}" ] || [ ! -f "${closestNypsRoot}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${closestNypsRoot}/pom.xml; then
     echo "Usage: switch-clone <NYPS2020 git root directory>"
-    return 1;
+    return 2;
   fi
 
   db_name="oraexp-$(basename $closestNypsRoot)"
