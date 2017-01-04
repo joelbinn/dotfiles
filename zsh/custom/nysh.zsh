@@ -112,7 +112,7 @@ setup-nyps2020-aliases() {
   #NYPS2020
   alias cdnyps="oscd $NYPS2020_ROOT"
   alias nyps-build-slow-test="mvnq install -o -T 1C -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-client="bash -c 'oscd $NEO_HOME && npm start '"
+  alias nyps-client="bash -c 'cd $NEO_HOME && npm start '"
 
   alias nyps-build-be-ear="mvnq -am -pl appl/be.appl/ear.be.appl -DskipTests"
   alias nyps-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
@@ -120,12 +120,12 @@ setup-nyps2020-aliases() {
   alias nyps-deploy-client="mvnq -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
 
   # MANGA
-  alias manga-client="bash -c 'oscd $MANGA_HOME && npm start '"
+  alias manga-client="bash -c 'cd $MANGA_HOME && npm start '"
   alias manga-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
   alias manga-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-be.appl/ear.myapp-be.appl"
 
   # MAMOCK
-  alias mamock-client="bash -c 'oscd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
+  alias mamock-client="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
   alias mamock-deploy="mvnq clean wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-ma-mock.appl"
 
   # AD-SYNC
