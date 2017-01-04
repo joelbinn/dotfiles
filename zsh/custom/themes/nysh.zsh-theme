@@ -1,7 +1,7 @@
 
- echo "Initialize joebin.zsh-theme..."
+ echo "Initialize nysh.zsh-theme..."
 
-# oh-my-zsh Bureau Theme
+# Based on oh-my-zsh Bureau Theme
 
 # För färger se http://misc.flogisoft.com/bash/tip_colors_and_formatting
 
@@ -78,7 +78,7 @@ if [[ "%#" == "#" ]]; then
   _LIBERTY="%{$fg[red]%}#"
 else
   _USERNAME="%{$fg_bold[white]%}%n"
-  _LIBERTY="%{$fg[green]%}λ"
+  _LIBERTY="%{$fg[green]%}nysh>"
 fi
 _USERNAME="$_USERNAME%{$reset_color%}@%m"
 _LIBERTY="$_LIBERTY%{$reset_color%}"
@@ -106,7 +106,9 @@ bureau_precmd () {
   _1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
   _1RIGHT=""
   _2LEFT="$(bureau_git_prompt)"
+  _2RIGHT="$(nyps_prompt)"
   _1SPACES=`get_space $_1LEFT $_1RIGHT`
+  _2SPACES=`get_space $_2LEFT $_2RIGHT`
   echo
 }
 
@@ -122,8 +124,9 @@ nyps_prompt() {
 
 setopt prompt_subst
 PROMPT='$_1LEFT$_1SPACES$_1RIGHT
-$(bureau_git_prompt)
+$(bureau_git_prompt)$(nyps_prompt)
 $_LIBERTY '
+# RPROMPT='$(nyps_shell)'
 
 autoload -U add-zsh-hook
 add-zsh-hook precmd bureau_precmd

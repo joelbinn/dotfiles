@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# För färger Se http://misc.flogisoft.com/bash/tip_colors_and_formatting
+
 setup-nyps2020-aliases() {
   local root=$1
   if [ "" = "$root" ]; then
@@ -8,6 +12,8 @@ setup-nyps2020-aliases() {
   export NEO_HOME=$NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl
   export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
+
+  alias mvnq='mvn -o -DskipTests -P-include-fe'
 
   #NYPS2020
   alias cdnyps="cd $NYPS2020_ROOT"
@@ -44,13 +50,12 @@ setup-nyps2020-aliases() {
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
   alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
   alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
-  alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
+  alias manga-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl clean compile flyway:migrate"
 
   alias db-clear="ssh oracle@oraexp 'bash db_import_test_dump.sh -f dev_db.dmp'"
   alias db-clear-manga="ssh oracle@oraexp 'bash db_import_test_dump_manga.sh -f NYPS2020_MIN_LOCAL_EMPTY.dmp'"
 
-  alias get2020root="echo $($NYPS2020_ROOT)"
-  alias mvnq='mvn -o -DskipTests -P-include-fe'
+  alias get2020root="echo $NYPS2020_ROOT"
 }
 
 db-wait-up() {
@@ -92,7 +97,7 @@ nysh() {
 
   db_name="oraexp-$(basename $closestNypsRoot)"
 
-  # echo "Starting Nyps shell in ${closestNypsRoot}"
+  echo "Starting Nyps shell in ${closestNypsRoot}"
   setup-nyps2020-aliases $closestNypsRoot;
 
   alias mvn="mvn -T 1C -Dmaven.repo.local=$closestNypsRoot/m2repo";
@@ -102,8 +107,9 @@ nysh() {
   alias db-up="db-wait-up $db_name";
 
   cd $root;
-  clear
+  #clear
 
+  ZSH_THEME="nysh"
   echo -e "\e[32m    _   __                    _____ __         ____"
   echo -e "\e[32m   / | / /_  ______  _____   / ___// /_  ___  / / /"
   echo -e "\e[32m  /  |/ / / / / __ \/ ___/   \__ \/ __ \/ _ \/ / / "
@@ -111,7 +117,7 @@ nysh() {
   echo -e "\e[32m/_/ |_/\__, / .___/____/   /____/_/ /_/\___/_/_/   "
   echo -e "\e[32m      /____/_/                                     "
   echo ""
-  echo -e "\e[32mIn GIT clone @ $closestNypsRoot                    "
+  echo -e "\e[32mIn GIT clone @ $closestNypsRoot\e[0m"
 }
 
 findClosestNypsRoot() {

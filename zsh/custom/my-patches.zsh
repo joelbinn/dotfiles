@@ -312,5 +312,3 @@ alias gs="git status"
 
 alias brew-refresh='brew update && brew upgrade --all && npm update -g'
 alias reload-shell=". ~/.dotfiles/zsh/custom/my-patches.zsh"
-
-. $DIR/nysh.zsh
