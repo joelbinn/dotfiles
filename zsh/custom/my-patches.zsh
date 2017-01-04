@@ -375,6 +375,7 @@ setup-nyps2020-aliases() {
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
   alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
   alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
+  alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
 
 # OBSOLETE
 #  alias nyps-mysql-authenticate_on="$NYPS2020_ROOT/etc/mysql/update-nyps-dev-authenticate.sh on"
@@ -421,23 +422,58 @@ nysh() {
   else
     root=$1;
   fi
-  if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
+  root=$(cd $root;pwd); # expand path
+  local closestNypsRoot=$(findClosestNypsRoot $root)
+
+  if [ "" = "${closestNypsRoot}" ] || [ ! -f "${closestNypsRoot}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${closestNypsRoot}/pom.xml; then
     echo "Usage: switch-clone <NYPS2020 git root directory>"
     return 1;
   fi
 
-  root=$(cd $root;pwd); # expand path
-  db_name="oraexp-$(basename $root)"
+  db_name="oraexp-$(basename $closestNypsRoot)"
 
-  echo "Switching to clone in $root";
-  setup-nyps2020-aliases $root;
+  echo "Starting Nyps shell in ${closestNypsRoot}"
+  setup-nyps2020-aliases $closestNypsRoot;
 
-  alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
+  alias mvn="mvn -T 1C -Dmaven.repo.local=$closestNypsRoot/m2repo";
   alias db-start="db-run $db_name";
   alias db-clear="docker rm -f $db_name";
   alias db-reset="db-clear && db-start";
   alias db-up="db-wait-up $db_name";
-  cd $NYPS2020_ROOT;
+
+  cd $root;
+}
+
+findClosestNypsRoot() {
+  local dir=$1
+  if [ "$dir" = "" ]; then
+    dir=$(pwd)
+  fi
+  dir=$(cd $dir; echo $(pwd))
+
+  if [ "$dir" = "/" ]; then
+    echo "NYPS_ROOT_NOT_FOUND";
+  elif isNypsRoot $dir ; then
+    echo $dir
+  else
+    echo $(findClosestNypsRoot $(cd "$dir/.."; echo $(pwd)))
+  fi
+}
+
+isNypsRoot() {
+  local root;
+  if [ "" = "$1" ]; then
+    root=$(pwd);
+  else
+    root=$1;
+  fi
+
+  if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
+    return 1;
+  else
+    return 0;
+  fi
+
 }
 
 alias nyps-maintenance="setup-nyps2020-aliases nyps2020-maintenance"
@@ -450,3 +486,8 @@ alias git="LC_ALL=en_US.UTF-8 git"
 alias reload-shell=". ~/.dotfiles/zsh/custom/my-patches.zsh"
 alias dkrsh='dockerExecBash'
 alias get2020root="echo $NYPS2020_ROOT"
+
+local closestNypsRoot=$(findClosestNypsRoot)
+if [ "$closestNypsRoot" != "NYPS_ROOT_NOT_FOUND" ] ; then
+  nysh
+fi
