@@ -78,7 +78,8 @@ if [[ "%#" == "#" ]]; then
   _LIBERTY="%{$fg[red]%}#"
 else
   _USERNAME="%{$fg_bold[white]%}%n"
-  _LIBERTY="%{$fg[green]%}λ"
+  # _LIBERTY="%{$fg[green]%}λ"
+  _LIBERTY="%{$fg[cyan]%}jobi>"
 fi
 _USERNAME="$_USERNAME%{$reset_color%}@%m"
 _LIBERTY="$_LIBERTY%{$reset_color%}"

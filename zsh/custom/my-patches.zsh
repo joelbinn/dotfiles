@@ -301,3 +301,13 @@ alias gs="git status"
 
 alias brew-refresh='brew update && brew upgrade --all && npm update -g'
 alias reload-shell=". ~/.dotfiles/zsh/custom/my-patches.zsh"
+
+clear
+
+if [ "$NYPS2020_SHELL" = "" ]; then
+  echo "\e[96m       __      __    _    _____ __         ____"
+  echo "\e[96m      / /___  / /_  (_)  / ___// /_  ___  / / /"
+  echo "\e[96m __  / / __ \/ __ \/ /   \__ \/ __ \/ _ \/ / / "
+  echo "\e[96m/ /_/ / /_/ / /_/ / /   ___/ / / / /  __/ / /  "
+  echo "\e[96m\____/\____/_.___/_/   /____/_/ /_/\___/_/_/   \e[0m"
+fi

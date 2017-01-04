@@ -2,6 +2,93 @@
 
 # För färger Se http://misc.flogisoft.com/bash/tip_colors_and_formatting
 
+## Local functions
+
+## Alternative cd
+alias oscd="builtin cd"
+
+cdWithNypsCheck() {
+  pushd "$1" > /dev/null;
+  local dir=$(pwd)
+  local closestNypsRoot=$(findClosestNypsRoot $dir)
+  if ! isNypsRoot $closestNypsRoot && [ "$NYPS2020_SHELL" != "" ]; then
+    unset NYPS2020_SHELL
+    . ~/.zshrc
+    return 0;
+  elif isNypsRoot $closestNypsRoot && [ "$NYPS2020_SHELL" = "" ]; then
+    . ~/.zshrc
+    return 0;
+  fi
+}
+
+function cd() {
+  if [ "$#" = "0" ]; then
+    pushd ${HOME} > /dev/null;
+  elif [ -f "${1}" ]; then
+    ${EDITOR} ${1};
+  else
+    cdWithNypsCheck $1;
+  fi
+}
+
+function bd(){
+  if [ "$#" = "0" ];  then
+    popd > /dev/null
+  else
+    for i in $(seq ${1})
+    do
+      popd > /dev/null
+    done
+  fi
+}
+
+## Check if the current directory is a nyps root
+isNypsRoot() {
+  local root;
+  if [ "" = "$1" ]; then
+    root=$(pwd);
+  else
+    root=$1;
+  fi
+
+  if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
+    return 1;
+  else
+    return 0;
+  fi
+
+}
+
+## Find the closest Nyps root (current dir or parents)
+findClosestNypsRoot() {
+  local dir=$1
+  if [ "$dir" = "" ]; then
+    dir=$(pwd)
+  fi
+  dir=$(oscd $dir; echo $(pwd))
+
+  if [ "$dir" = "/" ]; then
+    echo "NYPS_ROOT_NOT_FOUND";
+  elif isNypsRoot $dir ; then
+    echo $dir
+  else
+    echo $(findClosestNypsRoot $(oscd "$dir/.."; echo $(pwd)))
+  fi
+}
+
+## Show shell banner
+showBanner() {
+  echo -e "\e[32m    _   __                    _____ __         ____"
+  echo -e "\e[32m   / | / /_  ______  _____   / ___// /_  ___  / / /"
+  echo -e "\e[32m  /  |/ / / / / __ \/ ___/   \__ \/ __ \/ _ \/ / / "
+  echo -e "\e[32m / /|  / /_/ / /_/ (__  )   ___/ / / / /  __/ / /  "
+  echo -e "\e[32m/_/ |_/\__, / .___/____/   /____/_/ /_/\___/_/_/   "
+  echo -e "\e[32m      /____/_/                                     "
+  echo ""
+  echo -e "\e[32mIn GIT clone @ $closestNypsRoot\e[0m"
+}
+
+## Setup all aliases
 setup-nyps2020-aliases() {
   local root=$1
   if [ "" = "$root" ]; then
@@ -13,12 +100,17 @@ setup-nyps2020-aliases() {
   export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
 
+  alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
+  alias db-start="db-run $db_name";
+  alias db-clear="docker rm -f $db_name";
+  alias db-reset="db-clear && db-start";
+  alias db-up="db-wait-up $db_name";
   alias mvnq='mvn -o -DskipTests -P-include-fe'
 
   #NYPS2020
-  alias cdnyps="cd $NYPS2020_ROOT"
+  alias cdnyps="oscd $NYPS2020_ROOT"
   alias nyps-build-slow-test="mvnq install -o -T 1C -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-client="bash -c 'cd $NEO_HOME && npm start '"
+  alias nyps-client="bash -c 'oscd $NEO_HOME && npm start '"
 
   alias nyps-build-be-ear="mvnq -am -pl appl/be.appl/ear.be.appl -DskipTests"
   alias nyps-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
@@ -26,12 +118,12 @@ setup-nyps2020-aliases() {
   alias nyps-deploy-client="mvnq -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
 
   # MANGA
-  alias manga-client="bash -c 'cd $MANGA_HOME && npm start '"
+  alias manga-client="bash -c 'oscd $MANGA_HOME && npm start '"
   alias manga-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
   alias manga-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-be.appl/ear.myapp-be.appl"
 
   # MAMOCK
-  alias mamock-client="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
+  alias mamock-client="bash -c 'oscd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
   alias mamock-deploy="mvnq clean wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-ma-mock.appl"
 
   # AD-SYNC
@@ -89,6 +181,7 @@ db-wait-up() {
   done;
 }
 
+## Start the Nyps Shell
 nysh() {
   local root;
   if [ "" = "$1" ]; then
@@ -96,7 +189,7 @@ nysh() {
   else
     root=$1;
   fi
-  root=$(cd $root;pwd); # expand path
+  root=$(oscd $root;pwd); # expand path
   local closestNypsRoot=$(findClosestNypsRoot $root)
 
   if [ "$closestNypsRoot" = "NYPS_ROOT_NOT_FOUND" ]; then
@@ -104,8 +197,8 @@ nysh() {
     return 1;
   fi
 
-  if [ "" = "${closestNypsRoot}" ] || [ ! -f "${closestNypsRoot}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${closestNypsRoot}/pom.xml; then
-    echo "Usage: switch-clone <NYPS2020 git root directory>"
+  if ! isNypsRoot $closestNypsRoot ; then
+    echo "Usage: nysh <NYPS2020 git root directory>"
     return 2;
   fi
 
@@ -114,57 +207,17 @@ nysh() {
   echo "Starting Nyps shell in ${closestNypsRoot}"
   setup-nyps2020-aliases $closestNypsRoot;
 
-  alias mvn="mvn -T 1C -Dmaven.repo.local=$closestNypsRoot/m2repo";
-  alias db-start="db-run $db_name";
-  alias db-clear="docker rm -f $db_name";
-  alias db-reset="db-clear && db-start";
-  alias db-up="db-wait-up $db_name";
-
-  cd $root;
+  oscd $root;
   clear
 
   ZSH_THEME="nysh"
-  echo -e "\e[32m    _   __                    _____ __         ____"
-  echo -e "\e[32m   / | / /_  ______  _____   / ___// /_  ___  / / /"
-  echo -e "\e[32m  /  |/ / / / / __ \/ ___/   \__ \/ __ \/ _ \/ / / "
-  echo -e "\e[32m / /|  / /_/ / /_/ (__  )   ___/ / / / /  __/ / /  "
-  echo -e "\e[32m/_/ |_/\__, / .___/____/   /____/_/ /_/\___/_/_/   "
-  echo -e "\e[32m      /____/_/                                     "
-  echo ""
-  echo -e "\e[32mIn GIT clone @ $closestNypsRoot\e[0m"
+  NYPS2020_SHELL="ACTIVE"
+  showBanner
 }
 
-findClosestNypsRoot() {
-  local dir=$1
-  if [ "$dir" = "" ]; then
-    dir=$(pwd)
-  fi
-  dir=$(cd $dir; echo $(pwd))
-
-  if [ "$dir" = "/" ]; then
-    echo "NYPS_ROOT_NOT_FOUND";
-  elif isNypsRoot $dir ; then
-    echo $dir
-  else
-    echo $(findClosestNypsRoot $(cd "$dir/.."; echo $(pwd)))
-  fi
-}
-
-isNypsRoot() {
-  local root;
-  if [ "" = "$1" ]; then
-    root=$(pwd);
-  else
-    root=$1;
-  fi
-
-  if [ "" = "${root}" ] || [ ! -f "${root}/pom.xml" ] || ! grep -q "<name>Nyps 2020</name>" ${root}/pom.xml; then
-    return 1;
-  else
-    return 0;
-  fi
-
-}
+################
+##    main    ##
+################
 
 local closestNypsRoot=$(findClosestNypsRoot)
 if [ "$closestNypsRoot" != "NYPS_ROOT_NOT_FOUND" ] ; then
