@@ -118,7 +118,7 @@ nyps_prompt() {
   if [ "" = "$NYPS2020_ROOT" ]; then
     echo "";
   else
-    echo "%{$fg[red]%}@%{$reset_color%}%{$fg[green]%}%$truncwidth<...<$NYPS2020_ROOT%<<%{$reset_color%}";
+    echo " %{$fg[red]%}@%{$reset_color%} %{$fg[green]%}%$truncwidth<...<$NYPS2020_ROOT%<<%{$reset_color%}";
   fi
 }
 
