@@ -5,7 +5,9 @@
 ## Local functions
 
 ## Alternative cd
-alias oscd="builtin cd"
+oscd() {
+  builtin cd $1
+}
 
 cdWithNypsCheck() {
   pushd "$1" > /dev/null;
