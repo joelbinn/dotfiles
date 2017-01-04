@@ -274,17 +274,6 @@ dockerExecBash() {
     docker exec -it $1 bash
 }
 
-db-run() {
-  container_name=$1;
-  if [ "" = "$container_name" ]; then
-    container_name="oraexp"
-  fi
-
-  echo "Run DB container: $container_name"
-
-  docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
-}
-
 eval "$(thefuck --alias)"
 alias httpserver='server'
 alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"

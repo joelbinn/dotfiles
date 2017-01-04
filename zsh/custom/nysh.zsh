@@ -52,10 +52,19 @@ setup-nyps2020-aliases() {
   alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
   alias manga-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl clean compile flyway:migrate"
 
-  alias db-clear="ssh oracle@oraexp 'bash db_import_test_dump.sh -f dev_db.dmp'"
-  alias db-clear-manga="ssh oracle@oraexp 'bash db_import_test_dump_manga.sh -f NYPS2020_MIN_LOCAL_EMPTY.dmp'"
-
+  alias docker-refresh="docker pull capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest"
   alias get2020root="echo $NYPS2020_ROOT"
+}
+
+db-run() {
+  container_name=$1;
+  if [ "" = "$container_name" ]; then
+    container_name="oraexp"
+  fi
+
+  echo "Run DB container: $container_name"
+
+  docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
 }
 
 db-wait-up() {
