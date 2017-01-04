@@ -1,5 +1,5 @@
 
- echo "Initialize joebin.zsh-theme..."
+# echo "Initialize joebin.zsh-theme..."
 
 # oh-my-zsh Bureau Theme
 

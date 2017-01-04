@@ -1,5 +1,5 @@
 
- echo "Initialize nysh.zsh-theme..."
+# echo "Initialize nysh.zsh-theme..."
 
 # Based on oh-my-zsh Bureau Theme
 

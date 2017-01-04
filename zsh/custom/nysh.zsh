@@ -107,7 +107,7 @@ nysh() {
   alias db-up="db-wait-up $db_name";
 
   cd $root;
-  #clear
+  clear
 
   ZSH_THEME="nysh"
   echo -e "\e[32m    _   __                    _____ __         ____"
