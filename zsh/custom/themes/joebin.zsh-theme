@@ -1,5 +1,5 @@
 
-echo "Initialize joebin.zsh-theme..."
+# echo "Initialize joebin.zsh-theme..."
 
 # oh-my-zsh Bureau Theme
 
@@ -66,6 +66,8 @@ bureau_git_prompt () {
       _result="$_result $_status"
     fi
     _result="$_result$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  else
+    _result="%{$fg[blue]%}No GIT repo%{$reset_color%}"
   fi
   echo $_result
 }
