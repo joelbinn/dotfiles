@@ -111,19 +111,37 @@ bureau_precmd () {
   echo
 }
 
-nyps_prompt() {
+findClosestGitRepo() {
+  local dir=$1
+  if [ "$dir" = "" ]; then
+    dir=$(pwd)
+  fi
+  dir=$(oscd $dir; echo $(pwd))
+
+  if [ "$dir" = "/" ]; then
+    echo "GIT_REPO_NOT_FOUND";
+  elif [ -e "$dir/.git" ]; then
+    echo $dir
+  else
+    echo $(findClosestGitRepo $(oscd "$dir/.."; echo $(pwd)))
+  fi
+}
+
+
+gitRepo() {
   local truncwidth
   ((truncwidth=${COLUMNS}-25))
-  if [ "" = "$NYPS2020_ROOT" ]; then
+  local closestGitRepo=$(findClosestGitRepo)
+  if [ "GIT_REPO_NOT_FOUND" = "$closestGitRepo" ]; then
     echo "";
   else
-    echo "%{$fg[red]%}@%{$reset_color%}%{$fg[green]%}%$truncwidth<...<$NYPS2020_ROOT%<<%{$reset_color%}";
+    echo "%{$fg[red]%}@%{$reset_color%} %{$fg[green]%}%$truncwidth<...<$closestGitRepo%<<%{$reset_color%}";
   fi
 }
 
 setopt prompt_subst
 PROMPT='$_1LEFT$_1SPACES$_1RIGHT
-$(bureau_git_prompt)
+$(bureau_git_prompt) $(gitRepo)
 $_LIBERTY '
 
 autoload -U add-zsh-hook
