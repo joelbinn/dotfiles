@@ -11,17 +11,20 @@ export LC_ALL=$LANG
 export NLS_LANG=SWEDISH_SWEDEN.UTF8
 #PATH=$PATH:$ORACLE_HOME
 
-export PROJ_DISK=/Volumes/projects-40g
-export PROJSTUFF=$PROJ_DISK/projectstuff
-#export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export JAVA_HOME=/usr/local/jdk
-export PATH=$PATH:$HOME/.cabal/bin
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
-export PATH=./node:./node_modules/.bin:$PATH
-export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
-export REBEL_HOME=$HOME/verktyg/jrebel
-export NYPS_WILDFLY_OPTS="-XXaltjvm=dcevm"
+if [ "$JOEBIN_SH_PATH_SETUP" = ""]; then
+  export PROJ_DISK=/Volumes/projects-40g
+  export PROJSTUFF=$PROJ_DISK/projectstuff
+  #export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+  export JAVA_HOME=/usr/local/jdk
+  export PATH=$PATH:$HOME/.cabal/bin
+  export PATH=$HOME/bin:/usr/local/bin:$PATH
+  export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
+  export PATH=./node:./node_modules/.bin:$PATH
+  export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
+  export REBEL_HOME=$HOME/verktyg/jrebel
+  export NYPS_WILDFLY_OPTS="-XXaltjvm=dcevm"
+fi
+export JOEBIN_SH_PATH_SETUP="true"
 
 export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true"
 DIR="$( cd "$( dirname "$0" )" && pwd )"
