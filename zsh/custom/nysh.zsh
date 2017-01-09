@@ -104,7 +104,7 @@ setup-nyps2020-aliases() {
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
 
   alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
-  alias mvnq='mvn -o -DskipTests -P-include-fe'
+  alias mvnq="mvn -o -DskipTests -P-include-fe"
 
   #NYPS2020
   alias cdnyps="oscd $NYPS2020_ROOT"

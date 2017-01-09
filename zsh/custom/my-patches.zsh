@@ -214,19 +214,6 @@ db-reset-and-reload() {
     db-load-dumps $1 $2 $3;
 }
 
-db-migrate-nyps() {
-    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl/pom.xml;
-}
-
-db-migrate-manga() {
-    mvn clean compile flyway:migrate -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl/pom.xml;
-}
-
-db-migrate() {
-    db-migrate-manga;
-    db-migrate-nyps;
-}
-
 db-load-dumps() {
   date=$1;
   ver=$2;
