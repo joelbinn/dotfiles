@@ -4,11 +4,12 @@
 
 ## Local functions
 
-## Alternative cd
+## builtin cd
 oscd() {
   builtin cd $1
 }
 
+## Alternative cd
 cdWithNypsCheck() {
   pushd "$1" > /dev/null;
   local dir=$(pwd)

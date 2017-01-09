@@ -71,7 +71,29 @@ bureau_git_prompt () {
   echo $_result
 }
 
+local oscd() {
+  builtin cd $@
+}
 
+normalizeDir() {
+  echo $(oscd $1; echo $(pwd))
+}
+
+findClosestGitRoot() {
+  local dir=$1
+  if [ "$dir" = "" ]; then
+    dir=$(pwd)
+  fi
+  dir=$(normalizeDir $dir)
+
+  if [ "$dir" = "/" ]; then
+    echo "GIT_ROOT_NOT_FOUND";
+  elif [ -e "$dir/.git" ]; then
+    echo $dir
+  else
+    echo $(findClosestGitRoot $(normalizeDir "$dir/.."))
+  fi
+}
 
 if [[ "%#" == "#" ]]; then
   _USERNAME="%{$fg_bold[red]%}%n"
