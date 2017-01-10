@@ -11,7 +11,7 @@ export LC_ALL=$LANG
 export NLS_LANG=SWEDISH_SWEDEN.UTF8
 #PATH=$PATH:$ORACLE_HOME
 
-if [ "$JOEBIN_SH_PATH_SETUP" = ""]; then
+if [ "$JOEBIN_SH_PATH_SETUP" = "" ]; then
   export PROJ_DISK=/Volumes/projects-40g
   export PROJSTUFF=$PROJ_DISK/projectstuff
   #export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
@@ -262,6 +262,10 @@ dockerExecBash() {
     fi
 
     docker exec -it $1 bash
+}
+
+changed-mvn-projects() {
+  echo $(git status -s | awk '{print $2}'| grep "src/" | sed 's/src.*//' | uniq | tr '\n' ',')
 }
 
 eval "$(thefuck --alias)"

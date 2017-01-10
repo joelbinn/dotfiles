@@ -105,6 +105,8 @@ setup-nyps2020-aliases() {
 
   alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
   alias mvnq="mvn -o -DskipTests -P-include-fe"
+  alias bld="mvn -pl $(changed-mvn-projects)"
+  alias bldq="mvn -o -DskipTests -pl $(changed-mvn-projects)"
 
   #NYPS2020
   alias cdnyps="oscd $NYPS2020_ROOT"
