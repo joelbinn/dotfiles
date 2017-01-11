@@ -145,9 +145,11 @@ setup-nyps2020-aliases() {
   alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
   alias manga-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl clean compile flyway:migrate"
 
-  alias db-start="db-run $db_name";
+  alias db-start="docker start $db_name";
+  alias db-stop="docker stop $db_name";
+  alias db-init-start="db-run $db_name";
   alias db-clear="docker rm -f $db_name";
-  alias db-reset="db-clear && db-start && db-up";
+  alias db-reset="db-clear && db-init-start && db-up";
   alias db-up="db-wait-up $db_name";
 
   alias docker-refresh="docker pull capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest"
