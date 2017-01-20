@@ -104,9 +104,10 @@ setup-nyps2020-aliases() {
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
 
   alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
-  alias mvnq="mvn -o -DskipTests -P-include-fe"
-  alias bld="mvn -pl $(changed-mvn-projects)"
-  alias bldq="mvn -o -DskipTests -pl $(changed-mvn-projects)"
+  alias nymvn="mvn-color -T 1C -Dmaven.repo.local=$root/m2repo";
+  alias mvnq="nymvn -Dmaven.repo.local=$root/m2repo -o -DskipTests -P-include-fe"
+  alias bld="nymvn -pl $(changed-mvn-projects)"
+  alias bldq="nymvn -o -DskipTests -pl $(changed-mvn-projects)"
 
   #NYPS2020
   alias cdnyps="oscd $NYPS2020_ROOT"
@@ -145,9 +146,9 @@ setup-nyps2020-aliases() {
   alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
   alias manga-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl clean compile flyway:migrate"
 
-  alias db-start="docker start $db_name";
+  alias db-init-start="db-run $db_name  && db-up";
+  alias db-start="docker start $db_name && db-up";
   alias db-stop="docker stop $db_name";
-  alias db-init-start="db-run $db_name";
   alias db-clear="docker rm -f $db_name";
   alias db-reset="db-clear && db-init-start && db-up";
   alias db-up="db-wait-up $db_name";
@@ -210,7 +211,7 @@ nysh() {
     return 2;
   fi
 
-  db_name="oraexp-$(basename $closestNypsRoot)"
+  db_name=$(echo "oraexp-$(basename $closestNypsRoot)" | sed 's/\@/__/g');
 
   echo "Starting Nyps shell in ${closestNypsRoot}"
   setup-nyps2020-aliases $closestNypsRoot;
