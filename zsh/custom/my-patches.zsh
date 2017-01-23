@@ -33,7 +33,12 @@ echo "Initialize Joel's patches..."
 . $DIR/computer-specific
 
 echo "Initialize Joel's common environment variables..."
-export ip_address=`ifconfig ${NIC} | awk '/inet/ {print $2}' |  grep -e "\." `
+# ip_address may have been set in computer-specific
+if [ "$ip_address" = "" ]
+then
+  # OK try to do it the old way...
+  export ip_address=`ifconfig ${NIC} | awk '/inet/ {print $2}' |  grep -e "\." `
+fi  
 echo " -> ip_address=$ip_address"
 export EXTERNAL_IP_ADDRESS=$ip_address
 echo " -> EXTERNAL_IP_ADDRESS=$EXTERNAL_IP_ADDRESS"
