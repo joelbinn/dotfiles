@@ -103,9 +103,9 @@ setup-nyps2020-aliases() {
   export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl
   export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
 
-  alias mvn="mvn -T 1C -Dmaven.repo.local=$root/m2repo";
+  alias mvn="mvn-color -T 1C -Dmaven.repo.local=$root/m2repo";
   alias nymvn="mvn-color -T 1C -Dmaven.repo.local=$root/m2repo";
-  alias mvnq="nymvn -Dmaven.repo.local=$root/m2repo -o -DskipTests -P-include-fe"
+  alias mvnq="nymvn -Dmaven.repo.local=$root/m2repo -DskipTests -P-include-fe"
   alias bld="nymvn -pl $(changed-mvn-projects)"
   alias bldq="nymvn -o -DskipTests -pl $(changed-mvn-projects)"
 
@@ -155,6 +155,12 @@ setup-nyps2020-aliases() {
 
   alias docker-refresh="docker pull capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest"
   alias get2020root="echo $NYPS2020_ROOT"
+}
+
+dkr-code() {
+  local nypsRoot=$(basename $(findClosestNypsRoot));
+  local containerName="$(echo $nypsRoot | sed 's/[@-_]//g')_code_1";
+  docker exec -it $containerName zsh
 }
 
 db-run() {
@@ -211,7 +217,10 @@ nysh() {
     return 2;
   fi
 
-  db_name=$(echo "oraexp-$(basename $closestNypsRoot)" | sed 's/\@/__/g');
+  nypsRoot=$(basename $(findClosestNypsRoot));
+  closestNypsRootName=$(echo $nypsRoot | sed 's/[@_-]//g');
+  db_name="${closestNypsRootName}_oraexp_1";
+  codeContainerName="${closestNypsRootName}_code_1";
 
   echo "Starting Nyps shell in ${closestNypsRoot}"
   setup-nyps2020-aliases $closestNypsRoot;
@@ -220,6 +229,7 @@ nysh() {
   clear
 
   ZSH_THEME="nysh"
+  #ZSH_THEME="agnoster"
   NYPS2020_SHELL="ACTIVE"
   showBanner
 }

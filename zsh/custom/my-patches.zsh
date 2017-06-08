@@ -19,7 +19,7 @@ if [ "$JOEBIN_SH_PATH_SETUP" = ""  ]; then
   export PATH=$PATH:$HOME/.cabal/bin
   export PATH=$HOME/bin:/usr/local/bin:$PATH
   export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
-  export PATH=./node:./node_modules/.bin:$PATH
+  export PATH=./node:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin::$PATH
   export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
   export REBEL_HOME=$HOME/verktyg/jrebel
   export NYPS_WILDFLY_OPTS="-XXaltjvm=dcevm"
@@ -38,7 +38,7 @@ if [ "$ip_address" = "" ]
 then
   # OK try to do it the old way...
   export ip_address=`ifconfig ${NIC} | awk '/inet/ {print $2}' |  grep -e "\." `
-fi  
+fi
 echo " -> ip_address=$ip_address"
 export EXTERNAL_IP_ADDRESS=$ip_address
 echo " -> EXTERNAL_IP_ADDRESS=$EXTERNAL_IP_ADDRESS"
@@ -308,7 +308,6 @@ changed-mvn-projects() {
   echo $(git status -s | awk '{print $2}'| grep "src/" | sed 's/src.*//' | uniq | tr '\n' ',')
 }
 
-eval "$(thefuck --alias)"
 alias httpserver='server'
 alias killjboss="ps auxww | grep -e 'jboss'|awk '{print $2}'|xargs kill -9"
 alias mvn="mvn -T 1C"

@@ -103,7 +103,8 @@ bureau_precmd () {
   local truncwidth
   ((truncwidth=${COLUMNS}-50))
   _PATH="%{$FG[$salmon]%}%$truncwidth<...<%~%<<%{$reset_color%}"
-  _1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
+  #_1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME($EXTERNAL_IP_ADDRESS) $_PATH"
+  _1LEFT="%{$fg_bold[yellow]%}[%*]%{$reset_color%} $_USERNAME $_PATH"
   _1RIGHT=""
   _2LEFT="$(bureau_git_prompt)"
   _2RIGHT="$(nyps_prompt)"
