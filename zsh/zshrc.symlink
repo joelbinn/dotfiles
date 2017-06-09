@@ -54,7 +54,7 @@ if [ "$FPATH_SETUP" = "" ]; then
   fpath=($ZSH_CUSTOM/completion $fpath)
 fi
 export FPATH_SETUP="true"
-plugins=(git brew docker git-flow node npm ng scala sbt docker)
+plugins=(git brew docker git-flow node npm ng scala sbt docker docker-compose mvn)
 
 
 source $ZSH/oh-my-zsh.sh
