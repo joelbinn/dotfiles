@@ -159,7 +159,7 @@ setup-nyps2020-aliases() {
 
 dkr-code() {
   local nypsRoot=$(basename $(findClosestNypsRoot));
-  local containerName="$(echo $nypsRoot | sed 's/[@-_]//g')_code_1";
+  local containerName="$(echo $closestNypsRootName)_code_1";
   docker exec -it $containerName zsh
 }
 
@@ -218,7 +218,7 @@ nysh() {
   fi
 
   nypsRoot=$(basename $(findClosestNypsRoot));
-  closestNypsRootName=$(echo $nypsRoot | sed 's/[@_-]//g');
+  closestNypsRootName=$(echo $nypsRoot:l | sed 's/[@_-]//g');
   db_name="${closestNypsRootName}_oraexp_1";
   codeContainerName="${closestNypsRootName}_code_1";
 
