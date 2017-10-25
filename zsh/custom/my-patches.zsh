@@ -20,13 +20,14 @@ if [ "$JOEBIN_SH_PATH_SETUP" = ""  ]; then
   export PATH=$HOME/bin:/usr/local/bin:$PATH
   export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
   export PATH=./node:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin::$PATH
-  export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
+#  export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
   export REBEL_HOME=$HOME/verktyg/jrebel
   export NYPS_WILDFLY_OPTS="-XXaltjvm=dcevm"
 fi
 export JOEBIN_SH_PATH_SETUP="true"
 
-export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true"
+export MAVEN_OPTS="$MAVEN_OPTS -Xmx1500m"
+# export MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true -Xmx1g"
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 echo "Initialize Joel's patches..."
@@ -53,11 +54,11 @@ function server() {
         python -m SimpleHTTPServer "8989"
 }
 
-if [ -z "\${which tree}" ]; then
-  tree () {
-      find $@ -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
-  }
-fi
+#if [ -z "\${which tree}" ]; then
+#  tree {
+#      find $@ -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
+#  }
+#fi
 
 mcd () {
     mkdir "$@" && cd "$@"

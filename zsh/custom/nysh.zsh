@@ -137,9 +137,9 @@ setup-nyps2020-aliases() {
   alias nyps-deploy-adsync="mvnq -f $NYPS2020_ROOT/appl/adsync.appl/pom.xml install -Pdeploy"
   alias nyps-deploy-eco="mvnq -f $NYPS2020_ROOT/appl/ecoint-be.appl/ear.ecoint-be.appl/pom.xml install -Pdeploy"
 
-  alias nyps-wildfly-start-alt="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';export JAVA_OPTS='$JAVA_OPTS -XXaltjvm=dcevm'; $NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
-  alias nyps-wildfly-start="$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/standalone.sh"
-  alias nyps-wildfly-rebuild="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';mvnq -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly;$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.0.0.Final/bin/add-user.sh --user admin --password admin123"
+  alias nyps-wildfly-start-alt="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';export JAVA_OPTS='$JAVA_OPTS -XXaltjvm=dcevm'; $NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/standalone.sh"
+  alias nyps-wildfly-start="$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/standalone.sh"
+  alias nyps-wildfly-rebuild="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';mvnq -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly;$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/add-user.sh --user admin --password admin123"
 
   alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
   alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
