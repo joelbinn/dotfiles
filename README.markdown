@@ -1,8 +1,9 @@
 # joebin does dotfiles
 Mina fixar:
 
-* installera oh-my-zsh
-* installera mina dotfiles
+* installera [ZSH](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH) 
+* installera [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
+* installera mina dotfiles (se nedan)
 
 
 ## dotfiles
