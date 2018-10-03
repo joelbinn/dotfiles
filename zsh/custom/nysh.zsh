@@ -100,100 +100,61 @@ setup-nyps2020-aliases() {
   fi
   export NYPS2020_ROOT=$1
   export NEO_HOME=$NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl
-  export MANGA_HOME=$NYPS2020_ROOT/appl/fe.appl/manga.fe.appl
-  export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/ma-mock.fe.appl
+  export MAMOCK_HOME=$NYPS2020_ROOT/appl/fe.appl/mammut.fe.appl
 
   alias mvn="mvn-color -T 1C -Dmaven.repo.local=$root/m2repo";
   alias nymvn="mvn-color -T 1C -Dmaven.repo.local=$root/m2repo";
-  alias mvnq="nymvn -Dmaven.repo.local=$root/m2repo -DskipTests -P-include-fe"
+  alias mvnq="nymvn -Dmaven.repo.local=$root/m2repo -DskipTests"
+  alias mvn-nofe="mvnq -P-include-fe"
   alias bld="nymvn -pl $(changed-mvn-projects)"
   alias bldq="nymvn -o -DskipTests -pl $(changed-mvn-projects)"
 
-  #NYPS2020
+  # NYPS2020
   alias cdnyps="oscd $NYPS2020_ROOT"
-  alias nyps-build-slow-test="mvnq install -o -T 1C -Pslow-test,-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-client="bash -c 'cd $NEO_HOME && npm start '"
-
-  alias nyps-build-be-ear="mvnq -am -pl appl/be.appl/ear.be.appl -DskipTests"
-  alias nyps-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/be.appl/pom.xml install -Pdeploy"
-  alias nyps-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/be.appl/ear.be.appl"
-  alias nyps-deploy-client="mvnq -f $NYPS2020_ROOT/appl/fe.appl/neoclient.fe.appl/pom.xml wildfly:deploy"
+  alias nyps-client="bash -c 'oscd $NEO_HOME && npm run start-neo'"
+  alias nyps-build-ear="oscd $NYPS2020_ROOT ; mvnq install -am -pl :ear.be.appl; oscd -"
+  alias nyps-be-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :ear.be.appl wildfly:deploy ; oscd -"
+  alias nyps-build-ear-deploy="nyps-build-ear && nyps-be-deploy"
+  alias nyps-fe-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :neoclient-war.fe.appl wildfly:deploy ; oscd -"
 
   # MANGA
-  alias manga-client="bash -c 'cd $MANGA_HOME && npm start '"
-  alias manga-build-deploy="mvnq install -DskipTests -f common && mvn -DskipTests -f $NYPS2020_ROOT/appl/myapp-be.appl/pom.xml install -Pdeploy"
-  alias manga-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-be.appl/ear.myapp-be.appl"
+  alias manga-client="bash -c 'oscd $NEO_HOME && npm run start-manga'"
+  alias manga-build-ear="oscd $NYPS2020_ROOT ; mvnq install -pl :ear.myapp-be.appl -am ; oscd -"
+  alias manga-be-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :ear.myapp-be.appl wildfly:deploy ; oscd -"
+  alias manga-build-ear-deploy="manga-build-ear && manga-be-deploy"
+  alias manga-fe-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :manga-war.fe.appl wildfly:deploy ; oscd -"
 
-  # MAMOCK
-  alias mamock-client="bash -c 'cd $MAMOCK_HOME && grunt serve --open-page=false  --proxy-be=true '"
-  alias mamock-deploy="mvnq clean wildfly:deploy -f $NYPS2020_ROOT/appl/myapp-ma-mock.appl"
+  # MA2020
+  alias ma2020-client="bash -c 'oscd $NEO_HOME && npm run start-ma2020'"
+  alias ma2020-build-ear="oscd $NYPS2020_ROOT ; mvnq install -pl :ear.ma2020-be.appl -am ; oscd -"
+  alias ma2020-be-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :ear.ma2020-be.appl wildfly:deploy ; oscd -"
+  alias ma2020-build-ear-deploy="ma2020-build-ear && ma2020-be-deploy"
+  alias ma2020-fe-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :ma2020client-war.fe.appl wildfly:deploy ; oscd -"
 
-  # AD-SYNC
-  alias adsync-deploy="mvnq wildfly:deploy -f $NYPS2020_ROOT/appl/adsync.appl/ear.adsync.appl/"
+  # INTEGRATION
+  alias integration-deploy="oscd $NYPS2020_ROOT ; mvnq install -pl :ear.integration.appl -am; mvnq install -pl :ear.integration.appl && oscd -"
+
+  # TEST TOOLS + MAMMUT
+  alias mamock-be-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :myapp-ma-mock.appl wildfly:deploy ; oscd -"
+  alias mammut-client="bash -c 'oscd $MAMOCK_HOME && npm run start'"
+  alias mammut-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :mammut.fe.appl wildfly:deploy ; oscd -"
+  alias nyps-test-tool-deploy="oscd $NYPS2020_ROOT ; mvnq install wildfly:deploy -pl :dbtools.testsupport.test,:be-service-test-app-war.fe.appl ; oscd -"
 
   # MISC
-  alias nyps-build-all="mvnq clean install -DskipTests -P-include-fe -f $NYPS2020_ROOT/pom.xml"
-  alias nyps-deploy-all="nyps-be-build-deploy && manga-be-build-deploy && mamock-be-build-deploy"
-  alias nyps-deploy-adsync="mvnq -f $NYPS2020_ROOT/appl/adsync.appl/pom.xml install -Pdeploy"
-  alias nyps-deploy-eco="mvnq -f $NYPS2020_ROOT/appl/ecoint-be.appl/ear.ecoint-be.appl/pom.xml install -Pdeploy"
+  alias nyps-clean-build-all="mvnq clean install -f $NYPS2020_ROOT/pom.xml"
+  alias nyps-build-all="mvnq install -f $NYPS2020_ROOT/pom.xml"
+  alias nyps-deploy-all="nyps-build-all && nyps-be-deploy && manga-be-deploy && mammut-deploy && ma2020-be-deploy"
 
-  alias nyps-wildfly-start-alt="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';export JAVA_OPTS='$JAVA_OPTS -XXaltjvm=dcevm'; $NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/standalone.sh"
-  alias nyps-wildfly-start="$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/standalone.sh"
-  alias nyps-wildfly-rebuild="export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home';mvnq -f $NYPS2020_ROOT/tool/as.tool/pom.xml clean install -P setup-wildfly;$NYPS2020_ROOT/tool/as.tool/wildfly.as.tool/target/server/wildfly-10.1.0.Final/bin/add-user.sh --user admin --password admin123"
-
-  alias nyps-smartdocuments-test-configuration="echo exit | sqlplus64 nyps2020_local/utv888@oraexp/XE @$NYPS2020_ROOT/etc/sqlplus/set-nyps-smartdocuments-configuration.sql 'https://sdtest.tillvaxtverket.se/' 'userid' 'password'"
-  alias nyps-inttest="mvnq -f $NYPS2020_ROOT/test/service-int.test/ clean verify -Pint-test"
-  alias nyps-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/db-migration.tool.appl clean compile flyway:migrate"
-  alias manga-migrate="mvnq -f $NYPS2020_ROOT/appl/tool.appl/myapp-db-migration.tool.appl clean compile flyway:migrate"
-
-  alias db-init-start="db-run $db_name  && db-up";
-  alias db-start="docker start $db_name && db-up";
-  alias db-stop="docker stop $db_name";
-  alias db-clear="docker rm -f $db_name";
-  alias db-reset="db-clear && db-init-start && db-up";
-  alias db-up="db-wait-up $db_name";
-
-  alias docker-refresh="docker pull capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest"
+  alias nyps-migrate="oscd $NYPS2020_ROOT ; mvnq -pl :db-migration.tool.appl clean compile flyway:repair flyway:migrate ; oscd -"
+  alias nyps-build-migrate="oscd $NYPS2020_ROOT ; mvnq -pl :db-migration.tool.appl -am clean compile ; nyps-migrate ; oscd -"
   alias get2020root="echo $NYPS2020_ROOT"
-}
 
-dkr-code() {
-  local nypsRoot=$(basename $(findClosestNypsRoot));
-  local containerName="$(echo $closestNypsRootName)_code_1";
-  docker exec -it $containerName zsh
-}
+  alias nyps-alias-reload="source ~/.zshrc ; oscd / ; oscd -;"
 
-db-run() {
-  container_name=$1;
-  if [ "" = "$container_name" ]; then
-    container_name="oraexp"
-  fi
-
-  echo "Run DB container: $container_name"
-
-  docker run -d --shm-size=2G --name $container_name -p 1521:1521 capulet.tillvaxtverket.se:18078/nyps2020-db:v9.0.0-latest
-}
-
-db-wait-up() {
-  local container_name=$1;
-  if [ "" = "$container_name" ]; then
-    echo "Usage: db-wait-up <container name>"
-    return 1;
-  fi
-
-  dots="";
-  echo -en "Wait for Oracle to start";
-  while true; do
-    up=`docker exec -it ${container_name} /bin/bash -c 'echo "SELECT COUNT(*) FROM HR.EMPLOYEES;" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus sys/utv888 as sysdba'`;
-    if [[ "$up" =~ '.*ERROR.*' ]]; then
-      echo -en "${dots}"
-      dots="${dots}."
-    else
-      echo "\nOraexp has started!"
-      return;
-    fi
-    sleep 5
-  done;
+  alias nyps-dkr-attach="oscd  $NYPS2020_ROOT ; source devEnvAttach.sh ; oscd -"
+  alias nyps-dkr-detach="oscd  $NYPS2020_ROOT ; source devEnvDetach.sh ; oscd -"
+  alias nyps-dkr-start="oscd  $NYPS2020_ROOT ; source devEnvStart.sh ; oscd -"
+  alias nyps-dkr-remove="oscd  $NYPS2020_ROOT ; source devEnvRemove.sh ; oscd -"
 }
 
 ## Start the Nyps Shell
@@ -240,5 +201,7 @@ nysh() {
 
 local closestNypsRoot=$(findClosestNypsRoot)
 if [ "$closestNypsRoot" != "NYPS_ROOT_NOT_FOUND" ] ; then
-  nysh
+  nysh $closestNypsRoot
+else
+  echo "Hittade ingen nypsrot"
 fi

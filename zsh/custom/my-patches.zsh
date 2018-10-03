@@ -1,4 +1,4 @@
-. `/usr/local/bin/brew --prefix`/etc/profile.d/z.sh
+. `/usr/local/bin/brew --prefix`
 
 # Make sure locale is correct
 export LANG=sv_SE.UTF-8
@@ -17,6 +17,7 @@ if [ "$JOEBIN_SH_PATH_SETUP" = ""  ]; then
   #export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
   export JAVA_HOME=/usr/local/jdk
   export PATH=$PATH:$HOME/.cabal/bin
+  export PATH=$PATH:/Applications/calibre.app/Contents/MacOS
   export PATH=$HOME/bin:/usr/local/bin:$PATH
   export PATH=$PATH:/opt/local/bin:/opt/local/sbin:$JAVA_HOME/bin:.:/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
   export PATH=./node:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin::$PATH
