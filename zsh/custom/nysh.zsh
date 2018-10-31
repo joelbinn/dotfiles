@@ -132,7 +132,7 @@ setup-nyps2020-aliases() {
   alias ma2020-fe-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :ma2020client-war.fe.appl wildfly:deploy ; oscd -"
 
   # INTEGRATION
-  alias integration-deploy="oscd $NYPS2020_ROOT ; mvnq install -pl :ear.integration.appl -am; mvnq install -pl :ear.integration.appl && oscd -"
+  alias integration-deploy="oscd $NYPS2020_ROOT ; mvnq install -pl :ear.integration.appl -am; mvnq wildfly:deploy -pl :ear.integration.appl && oscd -"
 
   # TEST TOOLS + MAMMUT
   alias mamock-be-deploy="oscd $NYPS2020_ROOT ; mvnq -pl :myapp-ma-mock.appl wildfly:deploy ; oscd -"
